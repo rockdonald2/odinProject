@@ -1,0 +1,184 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+  transition: all 0.15s;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+
+main {
+  margin-top: 10rem;
+}
+
+.nav {
+  padding: 2rem 3rem 0 0;
+}
+.nav--list {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  list-style-type: none;
+}
+.nav--list__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav--list__item:not(:last-of-type) {
+  margin-right: 1rem;
+  padding: 0.5rem;
+}
+.nav--list__item a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1.3rem;
+}
+.nav--list__item a:hover, .nav--list__item a:focus {
+  text-decoration: underline;
+}
+.nav--list__item:last-of-type {
+  margin-left: 1rem;
+  background-color: darkcyan;
+  border-radius: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.nav--list__item:last-of-type a {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.6rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav--list__item:last-of-type a:hover, .nav--list__item:last-of-type a:focus {
+  text-decoration: none;
+}
+.nav--list__item svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #777;
+}
+.nav--list__item:nth-of-type(3) {
+  cursor: pointer;
+}
+.nav--list__item:nth-of-type(3):hover svg, .nav--list__item:nth-of-type(3):focus svg {
+  fill: #333;
+}
+
+.header {
+  padding-top: 2.5rem;
+}
+.header--logo {
+  text-align: center;
+}
+.header--logo img {
+  height: 100%;
+}
+
+.form {
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+}
+.form form {
+  width: 60rem;
+}
+.form--bar {
+  border-radius: 5rem;
+  border: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 2rem;
+}
+.form--bar:hover, .form--bar:focus {
+  border: 1px solid #dadce0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.form--bar__search svg {
+  width: 2rem;
+  height: 2rem;
+  fill: #ccc;
+}
+.form--bar input[type=text] {
+  flex: 1;
+  padding: 1rem 3rem;
+  border: none;
+}
+.form--bar__voice svg {
+  width: 2rem;
+  height: 2rem;
+}
+.form--btns {
+  margin-top: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form--btns__btn {
+  padding: 1rem 1.75rem;
+  border: 1px solid transparent;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #3c4043;
+}
+.form--btns__btn:not(:last-of-type) {
+  margin-right: 1rem;
+}
+.form--btns__btn:hover, .form--btns__btn:focus {
+  border: 1px solid #dadce0;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 2.5rem;
+  background-color: #f2f2f2;
+  border-top: 1px solid #ddd;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.footer--links {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+}
+.footer--links__link:not(:last-of-type) {
+  margin-right: 2.5rem;
+}
+.footer--links__link a {
+  text-decoration: none;
+  color: #555;
+}
+.footer--links__link a:hover, .footer--links__link a:focus {
+  text-decoration: underline;
+}
+.footer #links--left {
+  width: 60%;
+}
+.footer #links--right {
+  width: 40%;
+  justify-content: flex-end;
+}
+
+/*# sourceMappingURL=style.css.map */

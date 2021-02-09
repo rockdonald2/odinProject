@@ -1,0 +1,170 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500&display=swap");
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  font-family: "Josefin Sans", sans-serif;
+  box-sizing: border-box;
+}
+
+.header {
+  margin-top: 7.5rem;
+}
+.header h1 {
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: #e62649;
+  text-align: center;
+}
+
+.scoreboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 68rem;
+  margin: 5rem auto;
+  font-size: 1.8rem;
+  color: #cccccc;
+}
+.scoreboard--player, .scoreboard--computer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.scoreboard__counter {
+  margin-top: 2.5rem;
+  font-size: 2.4rem;
+  color: #3c4043;
+}
+
+.game ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+}
+.game #roundBoard {
+  flex-direction: column;
+}
+.game--card {
+  width: 30rem;
+  height: 40rem;
+}
+.game--card:not(:last-of-type) {
+  margin-right: 1.5rem;
+}
+.game--card:not(:nth-of-type(2)) {
+  border: 1px solid #eee;
+}
+.game--card__hand {
+  width: 100%;
+  height: 60%;
+  margin: 2.5rem 0;
+}
+.game--card__hand #playerHand.none {
+  background: url(none.7969bf7a.png) no-repeat 50%;
+  background-size: contain;
+}
+.game--card__hand #playerHand.paper {
+  background: url(paper.24d69089.png) no-repeat 50%;
+  background-size: contain;
+}
+.game--card__hand #playerHand.rock {
+  background: url(rock.fae7b245.png) no-repeat 50%;
+  background-size: contain;
+}
+.game--card__hand #playerHand.scissors {
+  background: url(scissors.0dc12241.png) no-repeat 50%;
+  background-size: contain;
+}
+.game--card__hand #computerHand.none {
+  background: url(none.7969bf7a.png) no-repeat 50%;
+  transform: scaleX(-1);
+  background-size: contain;
+  margin-left: auto;
+}
+.game--card__hand #computerHand.paper {
+  background: url(paper.24d69089.png) no-repeat 50%;
+  background-size: contain;
+  margin-left: auto;
+  transform: scaleX(-1);
+}
+.game--card__hand #computerHand.rock {
+  background: url(rock.fae7b245.png) no-repeat 50%;
+  background-size: contain;
+  margin-left: auto;
+  transform: scaleX(-1);
+}
+.game--card__hand #computerHand.scissors {
+  background: url(scissors.0dc12241.png) no-repeat 50%;
+  background-size: contain;
+  margin-left: auto;
+  transform: scaleX(-1);
+}
+.game--card__hand div {
+  width: 85%;
+  height: 100%;
+}
+.game--card__btns {
+  padding-top: 2.5rem;
+}
+.game--card__btns--cont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.game--card__btn {
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.game--card__btn:not(:last-of-type) {
+  margin-right: 1.5rem;
+}
+.game--card__btn:hover, .game--card__btn:focus {
+  background: rgba(60, 64, 67, 0.15);
+  box-shadow: 0 2.5px 5px rgba(60, 64, 67, 0.15);
+  transform: scale(1.05);
+  outline: none;
+}
+.game--card__btn svg {
+  height: 60px;
+  pointer-events: none;
+}
+.game--card__round {
+  text-align: center;
+  margin-top: 5rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 2.5rem;
+}
+.game--card__history {
+  width: 15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.8rem;
+  font-weight: 300;
+}
+.game--card__history:not(:last-of-type) {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f2f2f2;
+}
+.game--card__history div.won path {
+  fill: #e62649;
+}
+
+/*# sourceMappingURL=style.css.map */

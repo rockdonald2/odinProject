@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500&display=swap');
+
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 10px; // 1rem;
+}
+
+body {
+    font-family: 'Josefin Sans', sans-serif;
+    box-sizing: border-box;
+}
+
+.header {
+    margin-top: 7.5rem;
+
+    h1 {
+        font-size: 2.8rem;
+        font-weight: 400;
+        color: #e62649;
+        text-align: center;
+    }
+}
+
+.scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 68rem;
+    margin: 5rem auto;
+    font-size: 1.8rem;
+    color: #cccccc;
+
+    &--player, &--computer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    &__counter {
+        margin-top: 2.5rem;
+        font-size: 2.4rem;
+        color: #3c4043;
+    }
+}
+
+.game {
+    ul {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        list-style-type: none;
+    }
+
+    #roundBoard {
+        flex-direction: column;
+    }
+
+    &--card {
+        width: 30rem;
+        height: 40rem;
+
+        &:not(:last-of-type) {
+            margin-right: 1.5rem;
+        }
+
+        &:not(:nth-of-type(2)) {
+            border: 1px solid #eee;
+        }
+
+        &__hand {
+            width: 100%;
+            height: 60%;
+            margin: 2.5rem 0;
+
+            #playerHand.none {
+                background: url(none.7969bf7a.png) no-repeat 50%;
+                background-size: contain;
+            }
+
+            #playerHand.paper {
+                background: url(paper.24d69089.png) no-repeat 50%;
+                background-size: contain;
+            }
+
+            #playerHand.rock {
+                background: url(rock.fae7b245.png) no-repeat 50%;
+                background-size: contain;
+            }
+
+            #playerHand.scissors {
+                background: url(scissors.0dc12241.png) no-repeat 50%;
+                background-size: contain;
+            }
+
+            #computerHand.none {
+                background: url(none.7969bf7a.png) no-repeat 50%;
+                transform: scaleX(-1);
+                background-size: contain;
+                margin-left: auto;
+            }
+
+            #computerHand.paper {
+                background: url(paper.24d69089.png) no-repeat 50%;
+                background-size: contain;
+                margin-left: auto;
+                transform: scaleX(-1);
+            }
+
+            #computerHand.rock {
+                background: url(rock.fae7b245.png) no-repeat 50%;
+                background-size: contain;
+                margin-left: auto;
+                transform: scaleX(-1);
+            }
+
+            #computerHand.scissors {
+                background: url(scissors.0dc12241.png) no-repeat 50%;
+                background-size: contain;
+                margin-left: auto;
+                transform: scaleX(-1);
+            }
+
+            div {
+                width: 85%;
+                height: 100%;
+            }
+        }
+
+        &__btns {
+            padding-top: 2.5rem;
+
+            &--cont {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        &__btn {
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all .25s;
+
+            &:not(:last-of-type) {
+                margin-right: 1.5rem;
+            }
+
+            &:hover, &:focus {
+                background: rgba(#3c4043, .15);
+                box-shadow: 0 2.5px 5px rgba(#3c4043, .15);
+                transform: scale(1.05);
+                outline: none;
+            }
+
+            svg {
+                height: 60px;
+                pointer-events: none;
+            }
+        }
+
+        &__round {
+            text-align: center;
+            margin-top: 5rem;
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+        }
+
+        &__history {
+            width: 15rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.8rem;
+            font-weight: 300;
+
+            &:not(:last-of-type) {
+                margin-bottom: 1.5rem;
+                padding-bottom: 1.5rem;
+                border-bottom: 1px solid #f2f2f2;
+            }
+
+            & div.won {
+                path {
+                    fill: #e62649;
+                }
+            }
+        }
+    }
+}

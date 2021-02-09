@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
+
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 10px; // 1rem;
+}
+
+body {
+    font-family: "Josefin Sans", sans-serif;
+}
+
+.header {
+    text-align: center;
+    margin-top: 7.5rem;
+
+    h1, h2 {
+        font-weight: 400;
+    }
+
+    h1 {
+        font-size: 3.2rem;
+        margin-bottom: 2.5rem;
+        color: #e62649;
+    }
+
+    h2 {
+        font-size: 3.4rem;
+        font-family: "Caveat", cursive;
+        color: #3c4043;
+    }
+}
+
+.main {
+    margin-top: 5rem;
+}
+
+.controls {
+    width: 50rem;
+    margin: 0 auto;
+    color: #3c4043;
+
+    &--form {
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 1.5rem 1rem;
+
+        form {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        legend {
+            margin: 0 auto;
+            font-size: 1.8rem;
+        }
+
+        label {
+            font-size: 1.6rem;
+            color: #e62649;
+            font-weight: 500;
+            width: 5rem;
+            text-align: center;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: #eee;
+            outline: none;
+            height: 1.5rem;
+            border-radius: 20px;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 2rem;
+            height: 2rem;
+            background: #e62649;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 2rem;
+            height: 2rem;
+            background: #e62649;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        button[type="submit"],
+        button[type="button"]{
+            padding: .5rem 1.25rem;
+            font-weight: 300;
+            color: #e62649;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: rgba(#eee, .7);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all .25s;
+
+            svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                margin-right: .5rem;
+            }
+
+            &:focus {
+                outline: #e62649 solid 1px;
+            }
+
+            &:hover, &:focus {
+                background-color: #e62649;
+                color: #f8f9fa;
+            }
+        }
+    }
+}
+
+.container-grid {
+    display: grid;
+    width: 50rem;
+    height: 50rem;
+    margin: 2.5rem auto;
+    border: 1px solid #eee;
+    border-radius: 5px;
+
+    &--cell {
+        border: 1px solid #f2f2f2;
+        border-radius: 2.5px;
+    }
+}
