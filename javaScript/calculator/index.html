@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Calculator</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+	<h1>Calculator</h1>
+	<h2>Do some calculations and use the numpad on your keyboard to input values!</h2>
+</header>
+
+<main class="container">
+	<div class="calculator">
+		<div class="calculator--display">
+			<div class="calculator--display__raw" id="rawInput"></div>
+			<div class="calculator--display__input" id="input"></div>
+		</div>
+		<button class="calculator--btn calculator--btn__clear" data-key="8" data-value="del">
+			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+			     xmlns="http://www.w3.org/2000/svg">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+				      d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z"></path>
+			</svg>
+		</button>
+		<button class="calculator--btn calculator--btn__operator" data-key="27" data-value="clear">AC</button>
+		<button class="calculator--btn calculator--btn__operator" data-value="pow">x<sup>y</sup></button>
+		<button class="calculator--btn calculator--btn__operator" data-value="fact">x!</button>
+		<button class="calculator--btn calculator--btn__operator" data-key="111" data-value="div">
+			<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 448 512"
+			     xml:space="preserve"
+			     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+            <path style="fill:#e62649" d="M224,352C188.65,352 160,380.65 160,416C160,451.35 188.65,480 224,480C259.35,480 288,451.35 288,416C288,380.65 259.35,352 224,352ZM224,160C259.35,160 288,131.35 288,96C288,60.65 259.35,32 224,32C188.65,32 160,60.65 160,96C160,131.35 188.65,160 224,160ZM416,208L32,208C14.33,208 0,222.33 0,240L0,272C0,289.67 14.33,304 32,304L416,304C433.67,304 448,289.67 448,272L448,240C448,222.33 433.67,208 416,208Z"/>
+			</svg>
+		</button>
+		<button class="calculator--btn calculator--btn__number" data-key="103" data-value="7">7</button>
+		<button class="calculator--btn calculator--btn__number" data-key="104" data-value="8">8</button>
+		<button class="calculator--btn calculator--btn__number" data-key="105" data-value="9">9</button>
+		<button class="calculator--btn calculator--btn__operator" data-key="106" data-value="mult">
+			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+		</button>
+		<button class="calculator--btn calculator--btn__number" data-key="100" data-value="4">4</button>
+		<button class="calculator--btn calculator--btn__number" data-key="101" data-value="5">5</button>
+		<button class="calculator--btn calculator--btn__number" data-key="102" data-value="6">6</button>
+		<button class="calculator--btn calculator--btn__operator" data-key="109" data-value="subt">-</button>
+		<button class="calculator--btn calculator--btn__number" data-key="97" data-value="1">1</button>
+		<button class="calculator--btn calculator--btn__number" data-key="98" data-value="2">2</button>
+		<button class="calculator--btn calculator--btn__number" data-key="99" data-value="3">3</button>
+		<button class="calculator--btn calculator--btn__operator" data-key="107" data-value="add">+</button>
+		<button class="calculator--btn calculator--btn__operator" data-value="sign">+/-</button>
+		<button class="calculator--btn calculator--btn__number" data-key="96" data-value="0">0</button>
+		<button class="calculator--btn calculator--btn__operator" data-key="110" data-value="dec">.</button>
+		<button class="calculator--btn calculator--btn__evaluate" data-key="13" data-value="eval">=</button>
+	</div>
+	<div class="message-box hidden">
+		<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+		<p class="message-box--msg" id="msgBox">You must end an expression with an operand</p>
+	</div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

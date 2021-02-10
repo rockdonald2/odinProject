@@ -16,9 +16,37 @@ body {
   font-family: "Josefin Sans", sans-serif;
 }
 
+input[type=range] {
+  -webkit-appearance: none;
+  background: #eee;
+  outline: none;
+  height: 1.5rem;
+  border-radius: 20px;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 2rem;
+  height: 2rem;
+  background: #e62649;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 2rem;
+  height: 2rem;
+  background: #e62649;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
 .header {
   text-align: center;
-  margin-top: 7.5rem;
+  margin-top: 5rem;
 }
 .header h1, .header h2 {
   font-weight: 400;
@@ -64,31 +92,6 @@ body {
   width: 5rem;
   text-align: center;
 }
-.controls--form input[type=range] {
-  -webkit-appearance: none;
-  background: #eee;
-  outline: none;
-  height: 1.5rem;
-  border-radius: 20px;
-  -webkit-transition: 0.2s;
-  transition: opacity 0.2s;
-}
-.controls--form input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 2rem;
-  height: 2rem;
-  background: #e62649;
-  cursor: pointer;
-  border-radius: 50%;
-}
-.controls--form input[type=range]::-moz-range-thumb {
-  width: 2rem;
-  height: 2rem;
-  background: #e62649;
-  cursor: pointer;
-  border-radius: 50%;
-}
 .controls--form button[type=submit],
 .controls--form button[type=button] {
   padding: 0.5rem 1.25rem;
@@ -130,6 +133,15 @@ body {
 .container-grid--cell {
   border: 1px solid #f2f2f2;
   border-radius: 2.5px;
+}
+
+.eraser fieldset {
+  border: none;
+  width: 50rem;
+  margin: 1.5rem auto;
+}
+.eraser input {
+  width: 100%;
 }
 
 /*# sourceMappingURL=style.css.map */

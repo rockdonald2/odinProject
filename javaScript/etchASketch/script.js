@@ -3,9 +3,12 @@ const gridSizeInput = document.querySelector('#gridInput');
 const applyBtn = document.querySelector('#applyButton');
 const stopBtn = document.querySelector('#stopButton');
 const form = document.querySelector('#form');
+const eraserSlider = document.querySelector('#eraserSlider');
 
 const grid = document.querySelector('.container-grid');
 let gridCells = null;
+let actualSize = null;
+let currentSize = null;
 
 const INITIAL_SIZE = 16;
 const GRID_CELL_TEMPLATE = '<div class="container-grid--cell"></div>';
@@ -28,7 +31,8 @@ const makeGrid = (size) => {
 
     grid.innerHTML = '';
 
-    const actualSize = size ** 2;
+    currentSize = size;
+    actualSize = size ** 2;
 
     for (let i = 1; i <= actualSize; ++i) {
         grid.innerHTML += GRID_CELL_TEMPLATE;
@@ -57,6 +61,21 @@ stopBtn.addEventListener('click', (e) => {
 
 gridSizeInput.addEventListener('input', (e) => {
     gridSizeDisplay.innerText = `${e.target.value}x${e.target.value}`;
+});
+
+eraserSlider.addEventListener('input', (e) => {
+    const erasePercentage = e.target.value;
+    const eraseCells = Math.floor(Math.round(erasePercentage * currentSize / 100));
+
+    for (let r = 0; r < currentSize; ++r) {
+        for (let c = eraseCells; c < currentSize; ++c) {
+            gridCells[r * currentSize + c].setAttribute('style', '');
+        }
+    }
+});
+
+eraserSlider.addEventListener('mouseout', (e) => {
+    e.target.value = 100;
 });
 
 makeGrid(INITIAL_SIZE);
