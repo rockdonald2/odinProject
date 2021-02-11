@@ -27,7 +27,7 @@ body {
 
     h1 {
         font-size: 3.6rem;
-        margin: 5rem 0 2.5rem 0;
+        margin: 3rem 0 2.5rem 0;
         color: #e62649;
     }
 
@@ -41,7 +41,7 @@ body {
 .container {
     width: 50rem;
     height: 50rem;
-    margin: 5rem auto;
+    margin: 3rem auto;
 }
 
 .calculator {
@@ -111,7 +111,7 @@ body {
 }
 
 .message-box {
-    margin-top: 2.5rem;
+    margin: 2.5rem auto;
     padding-top: 2.5rem;
     border-top: 1px solid #eee;
     display: flex;
@@ -125,8 +125,8 @@ body {
 
     svg {
         stroke: #e62649;
-        width: 5rem;
-        height: 5rem;
+        width: 4rem;
+        height: 4rem;
         margin-bottom: 2.5rem;
     }
 

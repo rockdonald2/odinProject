@@ -151,7 +151,8 @@ function parseCurrentlyPressed(pressed) {
             removeMessage();
 
             if (+pressed === 0 && input.innerText.length === 0) return;
-            else if (pressed.match(/add|subt|mult|div|fact|pow/) && input.innerText.length === 0) return;
+            else if (pressed.match(/add|subt|mult|div|pow/) && input.innerText.length === 0
+                && rawInputData[rawInputData.length - 1] !== '!') return;
 
             addToInput(pressed);
         } else {
@@ -167,7 +168,7 @@ function parseCurrentlyPressed(pressed) {
         clearInputs();
     } else if (pressed === 'eval') {
         if (rawInputData.length === 0 ||
-            (rawInputData[rawInputData.length - 1].match(/[+\-*/!^]/) && !input.innerText.match(/[0-9]/))) {
+            (rawInputData[rawInputData.length - 1].match(/[+\-*/^]/) && !input.innerText.match(/[0-9]/))) {
             displayMessage('You must have a valid expression to evaluate');
         } else {
             transferToRawInput();
