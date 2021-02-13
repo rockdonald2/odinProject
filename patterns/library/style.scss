@@ -1,0 +1,538 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500&display=swap');
+
+$color-red-main: #e62649;
+$color-green: #5b9b32;
+$color-grey-secondary: #3c4043;
+$color-white: #f2f2f2;
+$margin-l: 5rem;
+$margin-m: $margin-l / 2;
+$margin-sm: $margin-l / 4;
+$padding-l: 5rem;
+$padding-m: $padding-l / 2;
+$padding-sm: $padding-l / 4;
+$size-l: 5rem;
+$size-m: $size-l / 2;
+$size-sm: $size-l / 4;
+@mixin flexCenterize {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+@mixin flexColumnCenter {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+@mixin flexHorizontal {
+    display: flex;
+    align-items: center;
+}
+@mixin transitionAll {
+    transition: all .2s;
+}
+@mixin layeredShadow {
+    box-shadow: 0 1px 1px rgba(0,0,0,0.12),
+    0 2px 2px rgba(0,0,0,0.12),
+    0 4px 4px rgba(0,0,0,0.12),
+    0 8px 8px rgba(0,0,0,0.12),
+    0 16px 16px rgba(0,0,0,0.12);
+}
+
+*,
+*::before,
+*::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 10px; // 1rem
+}
+
+body {
+    box-sizing: border-box;
+    font-family: "Josefin Sans", sans-serif;
+    min-height: 100vh;
+    color: $color-grey-secondary;
+    position: relative;
+}
+
+.header {
+    text-align: center;
+    padding-top: $padding-l;
+
+    h1 {
+        font-size: 3.8rem;
+        font-weight: 400;
+        color: $color-red-main;
+    }
+}
+
+.info {
+    margin-top: $margin-l;
+    border: 1px solid $color-grey-secondary;
+    border-radius: 10px;
+    padding: $padding-m * 1.5 $padding-m $padding-sm $padding-m;
+    position: relative;
+    @include flexCenterize;
+
+    &--subheader {
+        font-size: 2.4rem;
+        color: $color-red-main;
+        position: absolute;
+        top: -20%;
+        background-color: #fff;
+        padding: $padding-sm / 2 $padding-sm;
+    }
+
+    &--list {
+        list-style-type: none;
+        @include flexCenterize;
+
+        &__item {
+            font-size: 2rem;
+            padding: $padding-sm / 2;
+            cursor: default;
+
+            &:not(:last-of-type) {
+                margin-right: $margin-m;
+                padding-right: $padding-m;
+                border-right: 1px solid $color-red-main;
+            }
+
+            &:hover, &:focus {
+                span {
+                    color: $color-white;
+                }
+
+                span::after {
+                    height: 100%;
+                    background-color: $color-red-main;
+                }
+            }
+
+            span {
+                padding: $padding-sm / 4;
+                display: inline-block;
+                position: relative;
+                transition-delay: .15s;
+
+                &::after {
+                    content: "";
+                    width: 100%;
+                    display: block;
+                    background-color: $color-red-main;
+                    height: 3px;
+                    position: absolute;
+                    bottom: 2px;
+                    right: 50%;
+                    transform: translateX(50%);
+                    @include transitionAll;
+                    z-index: -1;
+                }
+            }
+        }
+    }
+}
+
+.btn {
+    border: none;
+    @include flexCenterize;
+    cursor: pointer;
+
+    svg {
+        height: $size-l / 1.5;
+        width: $size-l / 1.5;
+        display: block;
+        @include transitionAll;
+
+        path {
+            color: $color-white;
+        }
+    }
+
+    &:hover, &:focus {
+        outline: none;
+    }
+
+    &--add, &--clear {
+        border-radius: 50%;
+        width: 5rem;
+        height: 5rem;
+
+        &:hover, &:focus {
+            outline: none;
+
+            svg {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    &--add {
+        background-color: $color-red-main;
+        position: fixed;
+        bottom: 10%;
+        right: 10%;
+        @include transitionAll;
+
+        &:hover, &:focus {
+            @include layeredShadow;
+
+            &::after {
+                width: $size-l * 1.5;
+                height: $size-l * 1.5;
+            }
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            width: 0;
+            height: 0;
+            background-color: rgba($color-grey-secondary, .05);
+            border-radius: 50%;
+            z-index: -1;
+            @include transitionAll;
+        }
+    }
+
+    &--clear {
+        background-color: $color-grey-secondary;
+        position: fixed;
+        bottom: 10%;
+        left: 10%;
+        z-index: 1;
+
+
+        &:hover, &:focus {
+            width: 24.5rem;
+            padding-left: $padding-m;
+            justify-content: flex-start;
+            background: transparent;
+
+            &::after {
+                width: 25rem;
+                padding-left: $padding-m;
+                margin-left: 0;
+                color: $color-white;
+                opacity: 1;
+            }
+        }
+
+        &::after {
+            content: "Clear local storage";
+            position: absolute;
+            left: -1%;
+            background-color: $color-grey-secondary;
+            width: 0;
+            height: $size-l;
+            @include flexCenterize;
+            @include transitionAll;
+            opacity: 0;
+            border-radius: 25px;
+            color: transparent;
+            font-size: 1.4rem;
+            padding-left: $padding-l * 3;
+            z-index: -1;
+            @include layeredShadow;
+        }
+    }
+
+    &--read, &--remove {
+        padding: $padding-sm / 2.5 $padding-sm;
+        color: $color-white;
+        border-radius: 10px;
+        @include transitionAll;
+
+        svg {
+            width: $size-m;
+            height: $size-m;
+            margin-right: $margin-sm / 1.5;
+        }
+
+        &:hover, &:focus {
+            @include layeredShadow;
+        }
+    }
+
+    &--read {
+        &__yes {
+            background-color: $color-green;
+        }
+
+        &__no {
+            background-color: $color-red-main;
+        }
+    }
+
+    &--remove {
+        background-color: $color-grey-secondary;
+    }
+}
+
+.container {
+    padding: $padding-m 0;
+}
+
+.cards {
+    &--list {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+.card {
+    border: 1px solid $color-red-main;
+    border-radius: 10px;
+    padding: $padding-m;
+    margin: $margin-sm;
+
+    &--title {
+        margin-bottom: $margin-sm;
+        padding: 0 $padding-m $padding-sm $padding-m;
+        text-align: center;
+        border-bottom: 1px solid $color-red-main;
+        font-weight: bold;
+        font-size: 1.8rem;
+        color: $color-red-main;
+    }
+
+    &--author, &--pages {
+        text-align: right;
+        font-size: 1.4rem;
+    }
+
+    &--author {
+        margin-bottom: $margin-sm;
+    }
+
+    &--pages {
+        margin-bottom: $padding-m;
+    }
+
+    &--btns {
+        @include flexCenterize;
+
+        button {
+            flex: 1;
+            width: 12.5rem;
+
+            &:not(:last-of-type) {
+                margin-right: $margin-sm / 2;
+            }
+        }
+    }
+}
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100vw;
+    background-color: rgba($color-grey-secondary, .55);
+    z-index: -1;
+    opacity: 0;
+    backdrop-filter: blur(6px);
+    @include transitionAll;
+
+    &.show {
+        opacity: 1;
+        z-index: 50;
+    }
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 45rem;
+    @include flexColumnCenter;
+    background-color: $color-white;
+    padding: $padding-m;
+    z-index: -1;
+    opacity: 0;
+    border-radius: 10px;
+    @include transitionAll;
+
+    &.show {
+        opacity: 1;
+        z-index: 75;
+    }
+
+    &--title {
+        font-size: 2.4rem;
+        text-align: center;
+
+        &.hidden {
+            display: none;
+        }
+    }
+
+    &--field {
+        border: none;
+        padding-top: $padding-l;
+        width: 100%;
+    }
+
+    &--form {
+        width: 100%;
+        @include flexColumnCenter;
+
+        &.hidden {
+            display: none;
+        }
+
+        &__title, &__author, &__pages, #bookRead, button[type="submit"] {
+            width: 65%;
+        }
+
+        &__title, &__author {
+            position: relative;
+            margin-bottom: $margin-m;
+
+            label {
+                position: absolute;
+                padding: $padding-sm;
+                left: 0;
+                bottom: 0;
+                pointer-events: none;
+                font-size: 1.6rem;
+                @include transitionAll;
+            }
+
+            input {
+                width: 100%;
+                padding: $padding-sm 0 $padding-sm / 2 $padding-sm;
+                border: none;
+                border-bottom: 1px solid $color-red-main;
+                background: none;
+
+                &:focus, &:hover {
+                    outline: none;
+                }
+
+                &:focus, &:valid {
+                    & ~ label {
+                        bottom: 20px;
+                        font-size: 1.3rem;
+                        color: $color-red-main;
+                    }
+                }
+            }
+        }
+
+        &__pages {
+            padding: 0 0 0 $padding-sm;
+            @include flexHorizontal;
+            justify-content: space-between;
+            margin-bottom: $margin-m;
+
+            label {
+                margin-right: $margin-sm;
+                font-size: 1.6rem;
+                padding: $padding-sm / 2 0;
+            }
+
+            input {
+                width: 7.5rem;
+                border: none;
+                border-bottom: 1px solid $color-red-main;
+                background: none;
+                padding: $padding-sm / 2 $padding-sm / 2;
+
+                &:focus, &:hover {
+                    outline: none;
+                }
+            }
+        }
+
+        #bookRead {
+            margin-bottom: $margin-m;
+            padding: $padding-sm;
+            border: none;
+            border-bottom: 1px solid $color-red-main;
+            background: none;
+            font-size: 1.6rem;
+            font-family: "Josefin Sans", sans-serif;
+
+            &:focus, &:hover {
+                outline: none;
+            }
+        }
+
+        button[type="submit"] {
+            padding: $padding-sm / 2 $padding-m;
+            background: none;
+            border: 1px solid $color-red-main;
+            border-radius: 5px;
+            font-weight: bold;
+            color: $color-red-main;
+            cursor: pointer;
+            @include transitionAll;
+
+            &:hover, &:focus {
+                outline: none;
+                background-color: $color-red-main;
+                color: $color-white;
+                @include layeredShadow;
+            }
+        }
+    }
+
+    &--confirmation {
+        @include flexHorizontal;
+        justify-content: center;
+
+        &.hidden {
+            display: none;
+        }
+
+        button[type="submit"] {
+            padding: $padding-sm / 2 $padding-m;
+            background: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            @include transitionAll;
+
+            &:hover, &:focus {
+                outline: none;
+                @include layeredShadow;
+            }
+
+            &:nth-of-type(1) {
+                border: 1px solid $color-green;
+                color: $color-green;
+
+                &:hover, &:focus {
+                    background-color: $color-green;
+                    color: $color-white;
+                }
+            }
+
+            &:nth-of-type(2) {
+                border: 1px solid $color-red-main;
+                color: $color-red-main;
+
+                &:hover, &:focus {
+                    background-color: $color-red-main;
+                    color: $color-white;
+                }
+            }
+
+            &:not(:last-of-type) {
+                margin-right: $margin-m;
+            }
+        }
+
+    }
+}

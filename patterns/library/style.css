@@ -1,3 +1,441 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500&display=swap");
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
 
+html {
+  font-size: 10px;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: "Josefin Sans", sans-serif;
+  min-height: 100vh;
+  color: #3c4043;
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  padding-top: 5rem;
+}
+.header h1 {
+  font-size: 3.8rem;
+  font-weight: 400;
+  color: #e62649;
+}
+
+.info {
+  margin-top: 5rem;
+  border: 1px solid #3c4043;
+  border-radius: 10px;
+  padding: 3.75rem 2.5rem 1.25rem 2.5rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.info--subheader {
+  font-size: 2.4rem;
+  color: #e62649;
+  position: absolute;
+  top: -20%;
+  background-color: #fff;
+  padding: 0.625rem 1.25rem;
+}
+.info--list {
+  list-style-type: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.info--list__item {
+  font-size: 2rem;
+  padding: 0.625rem;
+  cursor: default;
+}
+.info--list__item:not(:last-of-type) {
+  margin-right: 2.5rem;
+  padding-right: 2.5rem;
+  border-right: 1px solid #e62649;
+}
+.info--list__item:hover span, .info--list__item:focus span {
+  color: #f2f2f2;
+}
+.info--list__item:hover span::after, .info--list__item:focus span::after {
+  height: 100%;
+  background-color: #e62649;
+}
+.info--list__item span {
+  padding: 0.3125rem;
+  display: inline-block;
+  position: relative;
+  transition-delay: 0.15s;
+}
+.info--list__item span::after {
+  content: "";
+  width: 100%;
+  display: block;
+  background-color: #e62649;
+  height: 3px;
+  position: absolute;
+  bottom: 2px;
+  right: 50%;
+  transform: translateX(50%);
+  transition: all 0.2s;
+  z-index: -1;
+}
+
+.btn {
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.btn svg {
+  height: 3.3333333333rem;
+  width: 3.3333333333rem;
+  display: block;
+  transition: all 0.2s;
+}
+.btn svg path {
+  color: #f2f2f2;
+}
+.btn:hover, .btn:focus {
+  outline: none;
+}
+.btn--add, .btn--clear {
+  border-radius: 50%;
+  width: 5rem;
+  height: 5rem;
+}
+.btn--add:hover, .btn--add:focus, .btn--clear:hover, .btn--clear:focus {
+  outline: none;
+}
+.btn--add:hover svg, .btn--add:focus svg, .btn--clear:hover svg, .btn--clear:focus svg {
+  transform: rotate(90deg);
+}
+.btn--add {
+  background-color: #e62649;
+  position: fixed;
+  bottom: 10%;
+  right: 10%;
+  transition: all 0.2s;
+}
+.btn--add:hover, .btn--add:focus {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
+}
+.btn--add:hover::after, .btn--add:focus::after {
+  width: 7.5rem;
+  height: 7.5rem;
+}
+.btn--add::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 0;
+  height: 0;
+  background-color: rgba(60, 64, 67, 0.05);
+  border-radius: 50%;
+  z-index: -1;
+  transition: all 0.2s;
+}
+.btn--clear {
+  background-color: #3c4043;
+  position: fixed;
+  bottom: 10%;
+  left: 10%;
+  z-index: 1;
+}
+.btn--clear:hover, .btn--clear:focus {
+  width: 24.5rem;
+  padding-left: 2.5rem;
+  justify-content: flex-start;
+  background: transparent;
+}
+.btn--clear:hover::after, .btn--clear:focus::after {
+  width: 25rem;
+  padding-left: 2.5rem;
+  margin-left: 0;
+  color: #f2f2f2;
+  opacity: 1;
+}
+.btn--clear::after {
+  content: "Clear local storage";
+  position: absolute;
+  left: -1%;
+  background-color: #3c4043;
+  width: 0;
+  height: 5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  opacity: 0;
+  border-radius: 25px;
+  color: transparent;
+  font-size: 1.4rem;
+  padding-left: 15rem;
+  z-index: -1;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
+}
+.btn--read, .btn--remove {
+  padding: 0.5rem 1.25rem;
+  color: #f2f2f2;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+.btn--read svg, .btn--remove svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.8333333333rem;
+}
+.btn--read:hover, .btn--read:focus, .btn--remove:hover, .btn--remove:focus {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
+}
+.btn--read__yes {
+  background-color: #5b9b32;
+}
+.btn--read__no {
+  background-color: #e62649;
+}
+.btn--remove {
+  background-color: #3c4043;
+}
+
+.container {
+  padding: 2.5rem 0;
+}
+
+.cards--list {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #e62649;
+  border-radius: 10px;
+  padding: 2.5rem;
+  margin: 1.25rem;
+}
+.card--title {
+  margin-bottom: 1.25rem;
+  padding: 0 2.5rem 1.25rem 2.5rem;
+  text-align: center;
+  border-bottom: 1px solid #e62649;
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #e62649;
+}
+.card--author, .card--pages {
+  text-align: right;
+  font-size: 1.4rem;
+}
+.card--author {
+  margin-bottom: 1.25rem;
+}
+.card--pages {
+  margin-bottom: 2.5rem;
+}
+.card--btns {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.card--btns button {
+  flex: 1;
+  width: 12.5rem;
+}
+.card--btns button:not(:last-of-type) {
+  margin-right: 0.625rem;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100vw;
+  background-color: rgba(60, 64, 67, 0.55);
+  z-index: -1;
+  opacity: 0;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s;
+}
+.overlay.show {
+  opacity: 1;
+  z-index: 50;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #f2f2f2;
+  padding: 2.5rem;
+  z-index: -1;
+  opacity: 0;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+.modal.show {
+  opacity: 1;
+  z-index: 75;
+}
+.modal--title {
+  font-size: 2.4rem;
+  text-align: center;
+}
+.modal--title.hidden {
+  display: none;
+}
+.modal--field {
+  border: none;
+  padding-top: 5rem;
+  width: 100%;
+}
+.modal--form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.modal--form.hidden {
+  display: none;
+}
+.modal--form__title, .modal--form__author, .modal--form__pages, .modal--form #bookRead, .modal--form button[type=submit] {
+  width: 65%;
+}
+.modal--form__title, .modal--form__author {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+.modal--form__title label, .modal--form__author label {
+  position: absolute;
+  padding: 1.25rem;
+  left: 0;
+  bottom: 0;
+  pointer-events: none;
+  font-size: 1.6rem;
+  transition: all 0.2s;
+}
+.modal--form__title input, .modal--form__author input {
+  width: 100%;
+  padding: 1.25rem 0 0.625rem 1.25rem;
+  border: none;
+  border-bottom: 1px solid #e62649;
+  background: none;
+}
+.modal--form__title input:focus, .modal--form__title input:hover, .modal--form__author input:focus, .modal--form__author input:hover {
+  outline: none;
+}
+.modal--form__title input:focus ~ label, .modal--form__title input:valid ~ label, .modal--form__author input:focus ~ label, .modal--form__author input:valid ~ label {
+  bottom: 20px;
+  font-size: 1.3rem;
+  color: #e62649;
+}
+.modal--form__pages {
+  padding: 0 0 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+.modal--form__pages label {
+  margin-right: 1.25rem;
+  font-size: 1.6rem;
+  padding: 0.625rem 0;
+}
+.modal--form__pages input {
+  width: 7.5rem;
+  border: none;
+  border-bottom: 1px solid #e62649;
+  background: none;
+  padding: 0.625rem 0.625rem;
+}
+.modal--form__pages input:focus, .modal--form__pages input:hover {
+  outline: none;
+}
+.modal--form #bookRead {
+  margin-bottom: 2.5rem;
+  padding: 1.25rem;
+  border: none;
+  border-bottom: 1px solid #e62649;
+  background: none;
+  font-size: 1.6rem;
+  font-family: "Josefin Sans", sans-serif;
+}
+.modal--form #bookRead:focus, .modal--form #bookRead:hover {
+  outline: none;
+}
+.modal--form button[type=submit] {
+  padding: 0.625rem 2.5rem;
+  background: none;
+  border: 1px solid #e62649;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #e62649;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.modal--form button[type=submit]:hover, .modal--form button[type=submit]:focus {
+  outline: none;
+  background-color: #e62649;
+  color: #f2f2f2;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
+}
+.modal--confirmation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal--confirmation.hidden {
+  display: none;
+}
+.modal--confirmation button[type=submit] {
+  padding: 0.625rem 2.5rem;
+  background: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.modal--confirmation button[type=submit]:hover, .modal--confirmation button[type=submit]:focus {
+  outline: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
+}
+.modal--confirmation button[type=submit]:nth-of-type(1) {
+  border: 1px solid #5b9b32;
+  color: #5b9b32;
+}
+.modal--confirmation button[type=submit]:nth-of-type(1):hover, .modal--confirmation button[type=submit]:nth-of-type(1):focus {
+  background-color: #5b9b32;
+  color: #f2f2f2;
+}
+.modal--confirmation button[type=submit]:nth-of-type(2) {
+  border: 1px solid #e62649;
+  color: #e62649;
+}
+.modal--confirmation button[type=submit]:nth-of-type(2):hover, .modal--confirmation button[type=submit]:nth-of-type(2):focus {
+  background-color: #e62649;
+  color: #f2f2f2;
+}
+.modal--confirmation button[type=submit]:not(:last-of-type) {
+  margin-right: 2.5rem;
+}
 
 /*# sourceMappingURL=style.css.map */

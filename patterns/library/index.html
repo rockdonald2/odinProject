@@ -7,13 +7,62 @@
 </head>
 <body>
 
-<header class="header">
+<div class="overlay" id="overlay"></div>
+<div class="modal" id="modal">
+	<h3 class="modal--title hidden" id="addBookTitle">Add a new book to your library</h3>
+	<h3 class="modal--title hidden" id="confirmTitle">Are you sure?</h3>
+	<fieldset class="modal--field">
+		<form class="modal--form hidden" id="addBookForm">
+			<div class="modal--form__title">
+				<input type="text" id="bookTitle" required>
+				<label for="bookTitle">Book title</label>
+			</div>
+			<div class="modal--form__author">
+				<input type="text" id="bookAuthor" required>
+				<label for="bookAuthor">Book author</label>
+			</div>
+			<div class="modal--form__pages">
+				<label for="bookPages">Number of pages</label>
+				<input type="number" id="bookPages" min="1">
+			</div>
+			<select id="bookRead">
+				<option value="yes" disabled>Have you read this book yet?</option>
+				<option value="yes" autofocus>I have read it</option>
+				<option value="no">I haven't read it</option>
+			</select>
+			<button type="submit">Add book</button>
+		</form>
+		<form class="modal--confirmation hidden" id="confirmationForm">
+			<button type="submit" value="yes">Yes</button>
+			<button type="submit" value="no">No</button>
+		</form>
+	</fieldset>
+</div>
 
+<header class="header">
+	<h1>Library</h1>
+	<div class="info">
+		<h2 class="info--subheader">Information</h2>
+		<ul class="info--list">
+			<li class="info--list__item">Books added <span id="noOfBooksAdded">0</span></li>
+			<li class="info--list__item">Books read <span id="noOfBooksRead">0</span></li>
+			<li class="info--list__item">Books not read <span id="noOfBooksNotRead">0</span></li>
+		</ul>
+	</div>
 </header>
 
 <main class="container">
-
+	<div class="cards">
+		<ul class="cards--list" id="cards"></ul>
+	</div>
 </main>
+
+<button class="btn btn--add" id="addButton">
+	<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+</button>
+<button class="btn btn--clear" id="clearButton">
+	<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+</button>
 
 <script src="script.js"></script>
 </body>
