@@ -49,7 +49,7 @@ function addBookToLibrary(e) {
         toggleAddBook();
     }, 250);
 
-    const formElems = e.path[0];
+    const formElems = e.target;
 
     if (formElems[3].value !== "yes" && formElems[3].value !== "no") {
         throw new Error('Invalid input at isRead');
