@@ -110,6 +110,10 @@ body {
         &:focus, &:hover {
             border: 2px solid $color-red-main;
         }
+
+        &.occupied {
+            cursor: not-allowed;
+        }
     }
 }
 
@@ -325,6 +329,7 @@ body {
                 background-color: rgba($color-grey-secondary, .05);
                 color: $color-red-main;
                 cursor: pointer;
+                font-weight: bold;
                 @include transition;
 
                 &:hover, &:focus {
@@ -348,5 +353,6 @@ body {
     #currentTurn {
         color: $color-red-main;
         font-weight: bold;
+        font-size: 3.2rem;
     }
 }

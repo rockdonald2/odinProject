@@ -1,58 +1,3 @@
-// button behaviour
-let modalController = (function () {
-    'use strict';
-
-    const btnMenu = document.querySelector('#btnMenu');
-    const btnRestart = document.querySelector('#btnRestart');
-    const overlay = document.querySelector('#overlay');
-    const modal = document.querySelector('#modal');
-
-    function toggleText(e) {
-        const text = this.querySelector('.btn--menu__text') || this.querySelector('.btn--restart__text');
-        if (e.type === "mouseleave") {
-            text.classList.toggle('hidden');
-        } else {
-            setTimeout(() => {
-                text.classList.toggle('hidden');
-            }, 25);
-        }
-    }
-
-    function toggleMenu(e) {
-        overlay.classList.add('show');
-        modal.classList.add('show');
-
-        setTimeout(() => {
-            document.activeElement.blur();
-        }, 250);
-    }
-
-    function hideOverlay(e) {
-        if (e.type === 'click' ||
-            (e.type === 'keydown' && e.key === 'Escape')) {
-            overlay.classList.remove('show');
-            modal.classList.remove('show');
-        }
-    }
-
-    function refreshPage(e) {
-        setTimeout(() => {
-            location.reload();
-        }, 150);
-    }
-
-    btnMenu.addEventListener('mouseenter', toggleText);
-    btnRestart.addEventListener('mouseenter', toggleText);
-    btnMenu.addEventListener('mouseleave', toggleText);
-    btnRestart.addEventListener('mouseleave', toggleText);
-    btnMenu.addEventListener('click', toggleMenu);
-    btnRestart.addEventListener('click', refreshPage);
-    overlay.addEventListener('click', hideOverlay);
-    document.addEventListener('keydown', hideOverlay);
-
-    return {hideOverlay};
-})();
-
 // GAME
 let displayController = (function () {
     const cellsLogical = [
@@ -63,7 +8,7 @@ let displayController = (function () {
     const cellsDom = document.querySelectorAll('.board--cell');
 
     function setCell(i, j, sign) {
-        if (sign === 'x' || sign === 'o') {
+        if (sign === 'x' || sign === 'o' || sign === null) {
             cellsLogical[i][j] = sign;
         }
     }
@@ -79,8 +24,13 @@ let displayController = (function () {
     function setDomCell(i, j, sign) {
         if ((sign === 'x' || sign === 'o') && isCellEmpty(i, j)) {
             cellsDom[i * 3 + j].innerText = sign;
+            cellsDom[i * 3 + j].classList.add('occupied');
             setCell(i, j, sign);
             return hasWon(sign);
+        } else if (sign === null) {
+            cellsDom[i * 3 + j].innerText = null;
+            cellsDom[i * 3 + j].classList.remove('occupied');
+            setCell(i, j, sign);
         }
     }
 
@@ -110,43 +60,228 @@ let displayController = (function () {
         return cellsDom;
     }
 
-    return {printLogical, setCell, setDomCell, isCellEmpty, hasWon, getDomCells};
+    function areAllCellsOccupied() {
+        return cellsLogical.every((c) => {
+           return c.every((s) => s !== null)
+        });
+    }
+
+    function emptyCells() {
+        let empty = [];
+
+        for (let i = 0; i < 3; ++i) {
+            for (let j = 0; j < 3; ++j) {
+                if (cellsLogical[i][j] === null) {
+                    empty.push([i, j]);
+                }
+            }
+        }
+
+        return empty;
+    }
+
+    return {printLogical, setCell, setDomCell, isCellEmpty, hasWon, getDomCells, areAllCellsOccupied, emptyCells};
 })();
 
 let gameController = (function () {
-    let playerSign = document.querySelector('#cross').value === 'on' ? 'x' : 'o';
+    let playerSign = document.querySelector('#cross').checked ? 'x' : 'o';
     let opponentSign = playerSign === 'x' ? 'o' : 'x';
     let aiOpponent = false;
     let playerTurn = true;
     const menuForm = document.querySelector('.modal--form');
     const turnDisplay = document.querySelector('#currentTurn');
+    let gameRunning = true;
 
     function setSettings(e) {
         e.preventDefault();
         const form = this;
         modalController.hideOverlay({type: 'click'});
-        playerSign = form.querySelector('#cross').value === 'on' ? 'x' : 'o';
+        playerSign = form.querySelector('#cross').checked ? 'x' : 'o';
         opponentSign = playerSign === 'x' ? 'o' : 'x';
-        aiOpponent = form.querySelector('#aiOpponent').value === 'on';
+        aiOpponent = form.querySelector('#aiOpponent').checked;
+        restartGame(e);
+    }
+
+    function restartGame(e) {
+        for (let i = 0; i < 3; ++i) {
+            for (let j = 0; j < 3; ++j) {
+                displayController.setDomCell(i, j, null);
+            }
+        }
+
+        turnDisplay.innerText = 'x';
+        playerTurn = playerSign === 'x';
+        gameRunning = true;
+
+        if (aiOpponent && opponentSign === 'x') {
+            playGame(null, 0, {});
+        }
+
+        setTimeout(() => {
+            document.activeElement.blur();
+        }, 250);
+    }
+
+    function miniMax(player) {
+        const availableCells = displayController.emptyCells();
+
+        if (displayController.hasWon(playerSign)) {
+            return {score: -10};
+        } else if (displayController.hasWon(opponentSign)) {
+            return {score: 10};
+        } else if (availableCells.length === 0) {
+            return {score: 0};
+        }
+
+        let moves = [];
+        availableCells.forEach((cell) => {
+            let move = {index: cell};
+
+            displayController.setCell(cell[0], cell[1], player);
+
+            if (player === opponentSign) {
+                const result = miniMax(playerSign);
+                move.score = result.score;
+            } else {
+                const result = miniMax(opponentSign);
+                move.score = result.score;
+            }
+
+            displayController.setCell(move.index[0], move.index[1], null);
+
+            moves.push(move);
+        });
+
+        let bestMove;
+        if (player === opponentSign) {
+            let bestScore = -10000;
+            moves.forEach((m, i) => {
+                if (m.score > bestScore) {
+                    bestScore = m.score;
+                    bestMove = i;
+                }
+            });
+        } else {
+            let bestScore = 10000;
+            moves.forEach((m, i) => {
+                if (m.score < bestScore) {
+                    bestScore = m.score;
+                    bestMove = i;
+                }
+            });
+        }
+
+        return moves[bestMove];
+    }
+
+    function playGame(cell, i, e) {
+        if (gameRunning && !aiOpponent) {
+            if (playerTurn) {
+                if (!displayController.isCellEmpty(Math.floor(i / 3), i % 3)) return;
+
+                if (displayController.setDomCell(Math.floor(i / 3), i % 3, playerSign)) {
+                    turnDisplay.innerText = "Player1 has won";
+                    gameRunning = false;
+                    return;
+                }
+            } else {
+                if (displayController.setDomCell(Math.floor(i / 3), i % 3, opponentSign)) {
+                    turnDisplay.innerText = "Player2 has won";
+                    gameRunning = false;
+                    return;
+                }
+            }
+
+            if (displayController.areAllCellsOccupied()) {
+                turnDisplay.innerText = 'It\'s a tie';
+            } else {
+                playerTurn = !playerTurn;
+                turnDisplay.innerText = playerTurn ? playerSign : opponentSign;
+            }
+        } else if (gameRunning && aiOpponent) {
+            if (playerTurn) {
+                if (displayController.setDomCell(Math.floor(i / 3), i % 3, playerSign)) {
+                    turnDisplay.innerText = "Player has won";
+                    gameRunning = false;
+                    return;
+                }
+            }
+
+            const aiMove = miniMax(opponentSign).index;
+            if (!playerTurn) {
+                playerTurn = true;
+            }
+
+            if (aiMove && displayController.setDomCell(aiMove[0], aiMove[1], opponentSign)) {
+                turnDisplay.innerText = "AI has won";
+                gameRunning = false;
+                return;
+            }
+
+            if (displayController.areAllCellsOccupied()) {
+                turnDisplay.innerText = 'It\'s a tie';
+            } else {
+                turnDisplay.innerText = playerTurn ? playerSign : opponentSign;
+            }
+        }
     }
 
     menuForm.addEventListener('submit', setSettings);
     displayController.getDomCells().forEach((cell, i) => {
-        cell.addEventListener('click', () => {
-            if (playerTurn) {
-                if (displayController.setDomCell(Math.floor(i / 3), i % 3, playerSign)) {
-                    console.log('WON player');
-                }
-            } else {
-                if (displayController.setDomCell(Math.floor(i / 3), i % 3, opponentSign)) {
-                    console.log('WON opponent');
-                }
-            }
-
-            playerTurn = !playerTurn;
-            turnDisplay.innerText = playerTurn ? playerSign : opponentSign;
-        });
+        cell.addEventListener('click', playGame.bind(null, cell, i));
     });
 
-    return {};
+    return {restartGame};
+})();
+
+// button behaviour
+let modalController = (function () {
+    'use strict';
+
+    const btnMenu = document.querySelector('#btnMenu');
+    const btnRestart = document.querySelector('#btnRestart');
+    const overlay = document.querySelector('#overlay');
+    const modal = document.querySelector('#modal');
+
+    function toggleText(e) {
+        const text = this.querySelector('.btn--menu__text') || this.querySelector('.btn--restart__text');
+        if (e.type === "mouseleave") {
+            text.classList.toggle('hidden');
+        } else {
+            setTimeout(() => {
+                text.classList.toggle('hidden');
+            }, 25);
+        }
+    }
+
+    function toggleMenu(e) {
+        overlay.classList.add('show');
+        modal.classList.add('show');
+        document.activeElement.blur();
+    }
+
+    function hideOverlay(e) {
+        if (e.type === 'click' ||
+            (e.type === 'keydown' && e.key === 'Escape')) {
+            overlay.classList.remove('show');
+            modal.classList.remove('show');
+        }
+    }
+
+    function refreshPage(e) {
+        setTimeout(() => {
+            location.reload();
+        }, 150);
+    }
+
+    btnMenu.addEventListener('mouseenter', toggleText);
+    btnRestart.addEventListener('mouseenter', toggleText);
+    btnMenu.addEventListener('mouseleave', toggleText);
+    btnRestart.addEventListener('mouseleave', toggleText);
+    btnMenu.addEventListener('click', toggleMenu);
+    btnRestart.addEventListener('click', gameController.restartGame);
+    overlay.addEventListener('click', hideOverlay);
+    document.addEventListener('keydown', hideOverlay);
+
+    return {hideOverlay};
 })();

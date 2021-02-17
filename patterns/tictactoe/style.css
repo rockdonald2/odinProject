@@ -74,6 +74,9 @@ body {
 .board--cell:focus, .board--cell:hover {
   border: 2px solid #e62649;
 }
+.board--cell.occupied {
+  cursor: not-allowed;
+}
 
 .btn {
   width: 5rem;
@@ -270,6 +273,7 @@ body {
   background-color: rgba(60, 64, 67, 0.05);
   color: #e62649;
   cursor: pointer;
+  font-weight: bold;
   transition: all 0.25s;
 }
 .modal--form__computer--btn:hover, .modal--form__computer--btn:focus {
@@ -289,6 +293,7 @@ body {
 .display #currentTurn {
   color: #e62649;
   font-weight: bold;
+  font-size: 3.2rem;
 }
 
 /*# sourceMappingURL=style.css.map */
