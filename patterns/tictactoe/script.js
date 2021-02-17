@@ -192,12 +192,6 @@ let gameController = (function () {
                 }
             }
 
-            if (displayController.areAllCellsOccupied()) {
-                turnDisplay.innerText = 'It\'s a tie';
-            } else {
-                playerTurn = !playerTurn;
-                turnDisplay.innerText = playerTurn ? playerSign : opponentSign;
-            }
         } else if (gameRunning && aiOpponent) {
             if (playerTurn) {
                 if (displayController.setDomCell(Math.floor(i / 3), i % 3, playerSign)) {
@@ -217,12 +211,16 @@ let gameController = (function () {
                 gameRunning = false;
                 return;
             }
+        }
 
-            if (displayController.areAllCellsOccupied()) {
-                turnDisplay.innerText = 'It\'s a tie';
-            } else {
-                turnDisplay.innerText = playerTurn ? playerSign : opponentSign;
+        if (displayController.areAllCellsOccupied()) {
+            turnDisplay.innerText = 'It\'s a tie';
+        } else {
+            if (!aiOpponent) {
+                playerTurn = !playerTurn;
             }
+
+            turnDisplay.innerText = playerTurn ? playerSign : opponentSign;
         }
     }
 
