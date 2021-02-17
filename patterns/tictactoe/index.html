@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<title>Tic Tac Toe</title>
 	<link rel="stylesheet" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <body>
 
@@ -27,6 +29,15 @@
 					<input type="checkbox" id="aiOpponent">
 					<span class="modal--form__computer--slider"></span>
 				</label>
+			</div>
+			<div class="modal--form__difficulty">
+				<label for="difficulty">Difficulty</label>
+				<select id="difficulty" disabled>
+					<option value="easy">Easy</option>
+					<option value="medium" selected>Medium</option>
+					<option value="hard">Hard</option>
+					<option value="Unbeatable">Unbeatable</option>
+				</select>
 			</div>
 			<button type="submit" class="modal--form__computer--btn">Set Settings</button>
 		</form>

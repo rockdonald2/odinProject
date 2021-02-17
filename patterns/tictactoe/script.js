@@ -62,7 +62,7 @@ let displayController = (function () {
 
     function areAllCellsOccupied() {
         return cellsLogical.every((c) => {
-           return c.every((s) => s !== null)
+            return c.every((s) => s !== null)
         });
     }
 
@@ -80,17 +80,23 @@ let displayController = (function () {
         return empty;
     }
 
-    return {printLogical, setCell, setDomCell, isCellEmpty, hasWon, getDomCells, areAllCellsOccupied, emptyCells};
+    return {setCell, setDomCell, isCellEmpty, hasWon, getDomCells, areAllCellsOccupied, emptyCells};
 })();
 
 let gameController = (function () {
     let playerSign = document.querySelector('#cross').checked ? 'x' : 'o';
     let opponentSign = playerSign === 'x' ? 'o' : 'x';
     let aiOpponent = false;
+    let aiDifficulty = document.querySelector('#difficulty').value;
     let playerTurn = true;
     const menuForm = document.querySelector('.modal--form');
     const turnDisplay = document.querySelector('#currentTurn');
     let gameRunning = true;
+
+    function generateRandomNumber(x, y) {
+        // generates a random int between [x, y)
+        return Math.floor(x + Math.random() * (y - x));
+    }
 
     function setSettings(e) {
         e.preventDefault();
@@ -99,6 +105,7 @@ let gameController = (function () {
         playerSign = form.querySelector('#cross').checked ? 'x' : 'o';
         opponentSign = playerSign === 'x' ? 'o' : 'x';
         aiOpponent = form.querySelector('#aiOpponent').checked;
+        aiDifficulty = form.querySelector('#difficulty').value;
         restartGame(e);
     }
 
@@ -171,14 +178,43 @@ let gameController = (function () {
             });
         }
 
+        switch (aiDifficulty) {
+            case 'easy': {
+                // 25% possibility of getting bestMove
+                let possibleMoves = [];
+                for (let i = 0; i < 3; ++i) {
+                    possibleMoves.push(generateRandomNumber(0, moves.length));
+                }
+                possibleMoves.push(bestMove);
+                bestMove = possibleMoves[generateRandomNumber(0, possibleMoves.length)];
+                break;
+            }
+            case 'medium': {
+                // 50% possibility of getting bestMove
+                let possibleMoves = [];
+                for (let i = 0; i < 2; ++i) {
+                    possibleMoves.push(generateRandomNumber(0, moves.length));
+                    possibleMoves.push(bestMove);
+                }
+                bestMove = possibleMoves[generateRandomNumber(0, possibleMoves.length)];
+                break;
+            }
+            case 'hard': {
+                // 75% possibility of getting bestMove
+                let possibleMoves = [bestMove, generateRandomNumber(0, moves.length), bestMove, bestMove];
+                bestMove = possibleMoves[generateRandomNumber(0, possibleMoves.length)];
+                break;
+            }
+        }
+
         return moves[bestMove];
     }
 
     function playGame(cell, i, e) {
+        if (!displayController.isCellEmpty(Math.floor(i / 3), i % 3)) return;
+
         if (gameRunning && !aiOpponent) {
             if (playerTurn) {
-                if (!displayController.isCellEmpty(Math.floor(i / 3), i % 3)) return;
-
                 if (displayController.setDomCell(Math.floor(i / 3), i % 3, playerSign)) {
                     turnDisplay.innerText = "Player1 has won";
                     gameRunning = false;
@@ -240,6 +276,8 @@ let modalController = (function () {
     const btnRestart = document.querySelector('#btnRestart');
     const overlay = document.querySelector('#overlay');
     const modal = document.querySelector('#modal');
+    const aiSelector = document.querySelector('#aiOpponent');
+    const difficultySelector = document.querySelector('#difficulty');
 
     function toggleText(e) {
         const text = this.querySelector('.btn--menu__text') || this.querySelector('.btn--restart__text');
@@ -272,6 +310,10 @@ let modalController = (function () {
         }, 150);
     }
 
+    function toggleDifficultySelector(e) {
+        difficultySelector.disabled = !difficultySelector.disabled;
+    }
+
     btnMenu.addEventListener('mouseenter', toggleText);
     btnRestart.addEventListener('mouseenter', toggleText);
     btnMenu.addEventListener('mouseleave', toggleText);
@@ -280,6 +322,7 @@ let modalController = (function () {
     btnRestart.addEventListener('click', gameController.restartGame);
     overlay.addEventListener('click', hideOverlay);
     document.addEventListener('keydown', hideOverlay);
+    aiSelector.addEventListener('change', toggleDifficultySelector);
 
     return {hideOverlay};
 })();
