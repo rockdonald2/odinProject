@@ -1,3 +1,5 @@
+'use strict';
+
 // GAME
 let displayController = (function () {
     const cellsLogical = [
@@ -98,6 +100,15 @@ let gameController = (function () {
         return Math.floor(x + Math.random() * (y - x));
     }
 
+    function shuffleMoves(moves) {
+        for (let i = moves.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = moves[i];
+            moves[i] = moves[j];
+            moves[j] = temp;
+        }
+    }
+
     function setSettings(e) {
         e.preventDefault();
         const form = this;
@@ -178,33 +189,52 @@ let gameController = (function () {
             });
         }
 
-        switch (aiDifficulty) {
-            case 'easy': {
-                // 25% possibility of getting bestMove
-                let possibleMoves = [];
-                for (let i = 0; i < 3; ++i) {
-                    possibleMoves.push(generateRandomNumber(0, moves.length));
+        if (aiDifficulty !== 'unbeatable') {
+            let possibleMoves = [];
+
+            switch (aiDifficulty) {
+                case 'easy': {
+                    // 70% possibility of getting bestMove
+                    for (let i = 0; i < 7; ++i) {
+                        possibleMoves.push(bestMove);
+                    }
+
+                    for (let i = 0; i < 3; ++i) {
+                        possibleMoves.push(generateRandomNumber(0, moves.length));
+                    }
+
+                    break;
                 }
-                possibleMoves.push(bestMove);
-                bestMove = possibleMoves[generateRandomNumber(0, possibleMoves.length)];
-                break;
-            }
-            case 'medium': {
-                // 50% possibility of getting bestMove
-                let possibleMoves = [];
-                for (let i = 0; i < 2; ++i) {
-                    possibleMoves.push(generateRandomNumber(0, moves.length));
-                    possibleMoves.push(bestMove);
+                case 'medium': {
+                    // 80% possibility of getting bestMove
+                    for (let i = 0; i < 8; ++i) {
+                        possibleMoves.push(bestMove);
+                    }
+
+                    for (let i = 0; i < 2; ++i) {
+                        possibleMoves.push(generateRandomNumber(0, moves.length));
+                    }
+
+                    break;
                 }
-                bestMove = possibleMoves[generateRandomNumber(0, possibleMoves.length)];
-                break;
+                case 'hard': {
+                    // 90% possibility of getting bestMove
+                    // ! on each recursive branch
+                    for (let i = 0; i < 9; ++i) {
+                        possibleMoves.push(bestMove);
+                    }
+
+                    for (let i = 0; i < 1; ++i) {
+                        possibleMoves.push(generateRandomNumber(0, moves.length));
+                    }
+
+                    break;
+                }
             }
-            case 'hard': {
-                // 75% possibility of getting bestMove
-                let possibleMoves = [bestMove, generateRandomNumber(0, moves.length), bestMove, bestMove];
-                bestMove = possibleMoves[generateRandomNumber(0, possibleMoves.length)];
-                break;
-            }
+
+            shuffleMoves(possibleMoves);
+
+            bestMove = possibleMoves[generateRandomNumber(0, possibleMoves.length)];
         }
 
         return moves[bestMove];
@@ -281,7 +311,7 @@ let modalController = (function () {
 
     function toggleText(e) {
         const text = this.querySelector('.btn--menu__text') || this.querySelector('.btn--restart__text');
-        if (e.type === "mouseleave") {
+        if (e.type === 'mouseleave') {
             text.classList.toggle('hidden');
         } else {
             setTimeout(() => {

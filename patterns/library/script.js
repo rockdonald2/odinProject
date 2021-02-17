@@ -41,6 +41,17 @@ function toggleConfirm() {
     confirmPanel.classList.toggle('hidden');
 }
 
+function toggleText(e) {
+    const text = this.querySelector('.btn--clear__text');
+    if (e.type === 'mouseleave') {
+        text.classList.toggle('hidden');
+    } else {
+        setTimeout(() => {
+            text.classList.toggle('hidden');
+        }, 25);
+    }
+}
+
 function addBookToLibrary(e) {
     e.preventDefault();
     toggleOverlay();
@@ -193,6 +204,8 @@ function removeBook(e) {
 
 addButton.addEventListener('click', showAddBookPanel);
 clearButton.addEventListener('click', showConfirmPanel);
+clearButton.addEventListener('mouseenter', toggleText);
+clearButton.addEventListener('mouseleave', toggleText);
 
 overlay.addEventListener('click', () => {
     overlay.classList.remove('show');
