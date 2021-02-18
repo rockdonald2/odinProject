@@ -1,105 +1,116 @@
-const overlay = document.querySelector('#overlay');
-const modal = document.querySelector('#modal');
-const addBookTitle = document.querySelector('#addBookTitle');
-const addBookPanel = document.querySelector('#addBookForm');
-const confirmTitle = document.querySelector('#confirmTitle');
-const confirmPanel = document.querySelector('#confirmationForm');
-const cardsContainer = document.querySelector('#cards');
-const addButton = document.querySelector('#addButton');
-const clearButton = document.querySelector('#clearButton');
-const noOfBooks = document.querySelector('#noOfBooksAdded');
-const noOfBooksRead = document.querySelector('#noOfBooksRead');
-const noOfBooksNotRead = document.querySelector('#noOfBooksNotRead');
+"use strict";
 
-let readButtons = null;
-let removeButtons = null;
-
-let library = [];
-
-function Book(title, author, noOfPages, isRead) {
+// using old constructor syntax
+/*function Book(title, author, noOfPages, isRead) {
     this.title = title;
     this.author = author;
     this.noOfPages = noOfPages;
     this.isRead = isRead;
-}
+}*/
 
-function toggleOverlay() {
-    overlay.classList.toggle('show');
-}
-
-function toggleModal() {
-    modal.classList.toggle('show');
-}
-
-function toggleAddBook() {
-    addBookTitle.classList.toggle('hidden');
-    addBookPanel.classList.toggle('hidden');
-}
-
-function toggleConfirm() {
-    confirmTitle.classList.toggle('hidden');
-    confirmPanel.classList.toggle('hidden');
-}
-
-function toggleText(e) {
-    const text = this.querySelector('.btn--clear__text');
-    if (e.type === 'mouseleave') {
-        text.classList.toggle('hidden');
-    } else {
-        setTimeout(() => {
-            text.classList.toggle('hidden');
-        }, 25);
-    }
-}
-
-function addBookToLibrary(e) {
-    e.preventDefault();
-    toggleOverlay();
-    toggleModal();
-    setTimeout(() => {
-        toggleAddBook();
-    }, 250);
-
-    const formElems = e.target;
-
-    if (formElems[3].value !== "yes" && formElems[3].value !== "no") {
-        throw new Error('Invalid input at isRead');
-    }
-
-    const currentData = [formElems[0].value, formElems[1].value, formElems[2].value, formElems[3].value === 'yes'];
-
-    if (library.filter((book) => {
-        if (book.title === currentData[0] && book.author === currentData[1]) {
-            return true;
+let libraryController = (function () {
+    // using class syntax
+    class Book {
+        constructor(title, author, noOfPages, isRead) {
+            this.title = title;
+            this.author = author;
+            this.noOfPages = noOfPages;
+            this.isRead = isRead;
         }
-    }).length === 0) {
-        library.push(new Book(currentData[0], currentData[1], currentData[2], currentData[3]));
-        setStorage();
-        showCards();
     }
 
-    e.target.reset();
-}
+    let library = [];
 
-function showAddBookPanel() {
-    setTimeout(() => {
-        document.activeElement.blur();
-    }, 250);
-    toggleOverlay();
-    toggleModal();
-    toggleAddBook();
-}
+    function setReadBook(e) {
+        const title = e.target.dataset['title'];
+        const author = e.target.dataset['author'];
 
-function showCards() {
-    cardsContainer.innerHTML = '';
+        const match = library.filter((book) => book.title === title && book.author === author);
 
-    noOfBooks.innerText = library.length;
-    noOfBooksRead.innerText = library.filter((book) => book.isRead).length;
-    noOfBooksNotRead.innerText = library.length - library.filter((book) => book.isRead).length;
+        if (match.length) {
+            const book = match[0];
+            book.isRead = !book.isRead;
+            displayController.showCards();
+        }
 
-    library.forEach((card) => {
-        cardsContainer.innerHTML +=
-            `<li class="card">
+        setTimeout(() => {
+            document.activeElement.blur();
+        }, 250);
+    }
+
+    function removeBook(e) {
+        const title = e.target.dataset['title'];
+        const author = e.target.dataset['author'];
+
+        library = library.filter((book) => book.title !== title && book.author !== author);
+        setStorage();
+        displayController.showCards();
+
+        setTimeout(() => {
+            document.activeElement.blur();
+        }, 250);
+    }
+
+    function setStorage() {
+        localStorage.setItem('library', JSON.stringify(library));
+    }
+
+    function retrieveLocalLibrary() {
+        if (localStorage.getItem('library')) {
+            library = JSON.parse(localStorage.getItem('library'));
+            displayController.showCards();
+        }
+    }
+
+    function addBookToLibrary(e) {
+        e.preventDefault();
+        displayController.hideModal();
+
+        const formElems = e.target;
+
+        if (formElems[3].value !== "yes" && formElems[3].value !== "no") {
+            throw new Error('Invalid input at isRead');
+        }
+
+        const currentData = [formElems[0].value, formElems[1].value, formElems[2].value, formElems[3].value === 'yes'];
+
+        if (library.filter((book) => {
+            if (book.title === currentData[0] && book.author === currentData[1]) {
+                return true;
+            }
+        }).length === 0) {
+            library.push(new Book(currentData[0], currentData[1], currentData[2], currentData[3]));
+            setStorage();
+            displayController.showCards();
+        }
+
+        e.target.reset();
+    }
+
+    function clearLibrary () {
+        library = [];
+    }
+
+    function clearLocalLibrary() {
+        localStorage.removeItem('library');
+    }
+
+    function getLibraryLength() {
+        return library.length;
+    }
+
+    function getNoOfBooksRead() {
+        return library.filter((book) => book.isRead).length;
+    }
+
+    function getNoOfBooksNotRead() {
+        return library.length - getNoOfBooksRead();
+    }
+
+    function createCards(container) {
+        library.forEach((card) => {
+            container.innerHTML +=
+                `<li class="card">
                 <h3 class="card--title">${card.title}</h3>
                 <p class="card--author">${card.author}</p>
                 <p class="card--pages">${card.noOfPages} pages</p>
@@ -124,101 +135,134 @@ function showCards() {
                     </button>
                 </div>
             </li>`;
+        });
+    }
+
+    return {clearLibrary, clearLocalLibrary, retrieveLocalLibrary, addBookToLibrary, removeBook, setReadBook, getLibraryLength, getNoOfBooksRead, getNoOfBooksNotRead, createCards};
+}());
+
+let displayController = (function () {
+    const overlay = document.querySelector('#overlay');
+    const modal = document.querySelector('#modal');
+    const addBookTitle = document.querySelector('#addBookTitle');
+    const addBookPanel = document.querySelector('#addBookForm');
+    const confirmTitle = document.querySelector('#confirmTitle');
+    const confirmPanel = document.querySelector('#confirmationForm');
+    const noOfBooks = document.querySelector('#noOfBooksAdded');
+    const noOfBooksRead = document.querySelector('#noOfBooksRead');
+    const noOfBooksNotRead = document.querySelector('#noOfBooksNotRead');
+    const cardsContainer = document.querySelector('#cards');
+    const addButton = document.querySelector('#addButton');
+    const clearButton = document.querySelector('#clearButton');
+    let readButtons = null;
+    let removeButtons = null;
+
+    function toggleOverlay(e) {
+        overlay.classList.toggle('show');
+    }
+
+    function toggleModal(e) {
+        modal.classList.toggle('show');
+    }
+
+    function toggleAddBook(e) {
+        addBookTitle.classList.toggle('hidden');
+        addBookPanel.classList.toggle('hidden');
+    }
+
+    function toggleConfirm(e) {
+        confirmTitle.classList.toggle('hidden');
+        confirmPanel.classList.toggle('hidden');
+    }
+
+    function toggleText(e) {
+        const text = this.querySelector('.btn--clear__text');
+        if (e.type === 'mouseleave') {
+            text.classList.toggle('hidden');
+        } else {
+            setTimeout(() => {
+                text.classList.toggle('hidden');
+            }, 25);
+        }
+    }
+
+    function hideModal(e) {
+        overlay.classList.remove('show');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            addBookTitle.classList.add('hidden');
+            addBookPanel.classList.add('hidden');
+            confirmTitle.classList.add('hidden');
+            confirmPanel.classList.add('hidden');
+        }, 250);
+    }
+
+    function showConfirmPanel(e) {
+        setTimeout(() => {
+            document.activeElement.blur();
+        }, 250);
+        toggleOverlay();
+        toggleModal();
+        toggleConfirm();
+    }
+
+    function handleConfirm(e) {
+        e.preventDefault();
+        toggleOverlay();
+        toggleModal();
+        setTimeout(() => {
+            toggleConfirm();
+        }, 250);
+
+        if (e.submitter.value === "yes") {
+            libraryController.clearLibrary();
+            libraryController.clearLocalLibrary();
+            showCards();
+        }
+    }
+
+    function showAddBookPanel(e) {
+        setTimeout(() => {
+            document.activeElement.blur();
+        }, 250);
+        toggleOverlay();
+        toggleModal();
+        toggleAddBook();
+    }
+
+    function showCards() {
+        cardsContainer.innerHTML = '';
+
+        noOfBooks.innerText = libraryController.getLibraryLength();
+        noOfBooksRead.innerText = libraryController.getNoOfBooksRead();
+        noOfBooksNotRead.innerText = libraryController.getNoOfBooksNotRead();
+
+        libraryController.createCards(cardsContainer);
+
+        readButtons = document.querySelectorAll('.btn--read');
+        removeButtons = document.querySelectorAll('.btn--remove')
+
+        addBtnEventListeners(readButtons, removeButtons);
+    }
+
+    function addBtnEventListeners(readButtonGroup, removeButtonGroup) {
+        readButtonGroup.forEach((book) => book.addEventListener('click', libraryController.setReadBook));
+        removeButtonGroup.forEach((book) => book.addEventListener('click', libraryController.removeBook));
+    }
+
+    addButton.addEventListener('click', showAddBookPanel);
+    clearButton.addEventListener('click', showConfirmPanel);
+    clearButton.addEventListener('mouseenter', toggleText);
+    clearButton.addEventListener('mouseleave', toggleText);
+
+    overlay.addEventListener('click', () => {
+        hideModal();
     });
 
-    readButtons = document.querySelectorAll('.btn--read');
-    removeButtons = document.querySelectorAll('.btn--remove')
+    addBookPanel.addEventListener('submit', libraryController.addBookToLibrary);
+    confirmPanel.addEventListener('submit', handleConfirm);
 
-    addBtnEventListeners(readButtons, removeButtons);
-}
+    return {showCards, hideModal};
+}());
 
-function showConfirmPanel() {
-    setTimeout(() => {
-        document.activeElement.blur();
-    }, 250);
-    toggleOverlay();
-    toggleModal();
-    toggleConfirm();
-}
-
-function handleConfirm(e) {
-    e.preventDefault();
-    toggleOverlay();
-    toggleModal();
-    setTimeout(() => {
-        toggleConfirm();
-    }, 250);
-
-    if (e.submitter.value === "yes") {
-        library = [];
-        localStorage.removeItem('library');
-        showCards();
-    }
-}
-
-function retrieveLocalLibrary() {
-    if (localStorage.getItem('library')) {
-        library = JSON.parse(localStorage.getItem('library'));
-        showCards();
-    }
-}
-
-function setStorage() {
-    localStorage.setItem('library', JSON.stringify(library));
-}
-
-function addBtnEventListeners(group1, group2) {
-    group1.forEach((book) => book.addEventListener('click', setReadBook));
-    group2.forEach((book) => book.addEventListener('click', removeBook));
-}
-
-function setReadBook(e) {
-    const title = e.target.dataset['title'];
-    const author = e.target.dataset['author'];
-
-    const match = library.filter((book) => book.title === title && book.author === author);
-
-    if (match.length) {
-        const book = match[0];
-        book.isRead = !book.isRead;
-        showCards();
-    }
-
-    setTimeout(() => {
-        document.activeElement.blur();
-    }, 250);
-}
-
-function removeBook(e) {
-    const title = e.target.dataset['title'];
-    const author = e.target.dataset['author'];
-
-    library = library.filter((book) => book.title !== title && book.author !== author);
-    setStorage();
-    showCards();
-
-    setTimeout(() => {
-        document.activeElement.blur();
-    }, 250);
-}
-
-addButton.addEventListener('click', showAddBookPanel);
-clearButton.addEventListener('click', showConfirmPanel);
-clearButton.addEventListener('mouseenter', toggleText);
-clearButton.addEventListener('mouseleave', toggleText);
-
-overlay.addEventListener('click', () => {
-    overlay.classList.remove('show');
-    modal.classList.remove('show');
-    setTimeout(() => {
-        addBookTitle.classList.add('hidden');
-        addBookPanel.classList.add('hidden');
-        confirmTitle.classList.add('hidden');
-        confirmPanel.classList.add('hidden');
-    }, 250);
-});
-
-addBookPanel.addEventListener('submit', addBookToLibrary);
-confirmPanel.addEventListener('submit', handleConfirm);
-
-retrieveLocalLibrary();
+libraryController.retrieveLocalLibrary();

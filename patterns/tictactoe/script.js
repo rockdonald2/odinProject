@@ -292,7 +292,7 @@ let gameController = (function () {
 
     menuForm.addEventListener('submit', setSettings);
     displayController.getDomCells().forEach((cell, i) => {
-        cell.addEventListener('click', playGame.bind(null, cell, i));
+        cell.addEventListener('click', playGame.bind(cell, cell, i));
     });
 
     return {restartGame};
