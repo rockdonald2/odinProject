@@ -3,11 +3,62 @@
 <head>
 	<meta charset="UTF-8">
 	<title>ToDo App</title>
-	<link rel="stylesheet" href="/dist/style.css" type="text/css">
+	<link rel="stylesheet" href="style.css" type="text/css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 </head>
 <body>
+
+<div class="overlay"></div>
+<div class="modal">
+	<fieldset class="modal--field hidden" id="addTaskPanel">
+		<legend class="modal--title">Add a task</legend>
+		<form action="" class="modal--form" id="addTaskForm">
+			<div class="modal--form__title">
+				<input type="text" id="taskTitle" required>
+				<label for="taskTitle">Title</label>
+			</div>
+			<div class="modal--form__note">
+				<textarea id="taskNote"></textarea>
+				<label for="taskNote">Note</label>
+			</div>
+			<div class="modal--form__time">
+				<div class="modal--form__time--btn">
+					<button id="taskAddTimeBtn" type="button">
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+						Add a time
+					</button>
+					<div class="hidden">
+						<label for="taskTime">Due time</label>
+						<input type="date" id="taskTime" min="2021-02-21">
+					</div>
+				</div>
+			</div>
+			<div class="modal--form__category">
+				<div class="modal--form__category--btn">
+					<button id="taskAddCategoryBtn" type="button">
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+						Add a category
+					</button>
+					<div class="hidden">
+						<label for="taskCategory">Category</label>
+						<input type="color" id="taskCategoryColor" value="#1eb4c8">
+						<input type="text" id="taskCategory" min="2021-02-21">
+					</div>
+				</div>
+			</div>
+			<button type="submit" id="taskSubmitBtn">Create task</button>
+		</form>
+	</fieldset>
+	<div class="modal--task hidden" id="morePanel">
+		<h3 class="modal--task__title"></h3>
+		<p class="modal--task__description"></p>
+		<div class="modal--task__bar">
+			<span class="modal--task__bar--duetime"></span>
+			<span class="modal--task__bar--category"></span>
+		</div>
+	</div>
+</div>
 
 <header class="header">
 	<div class="header--logo">
@@ -29,7 +80,7 @@
 		</fieldset>
 	</div>
 	<div class="header--btns">
-		<button class="header--btns__add">
+		<button class="header--btns__add" id="headerAddTaskBtn">
 			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
 		</button>
 		<button class="header--btns__uncompleted">
@@ -39,49 +90,61 @@
 		<button class="header--btns__archive">
 			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
 		</button>
-		<button class="header--btns__settings">
+		<!--<button class="header&#45;&#45;btns__settings">
 			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-		</button>
+		</button>-->
 	</div>
 </header>
 
 <main class="container">
-	<section class="side-panel"></section>
+	<section class="side-panel">
+		<ul class="side-panel--menu">
+			<li class="side-panel--menu__item active">
+				<button class="side-panel--menu__btn">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+					All tasks
+					<small id="allTasksCounter">8</small>
+				</button>
+			</li>
+			<li class="side-panel--menu__item">
+				<button class="side-panel--menu__btn">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+					Today
+					<small id="todayTasksCounter">8</small>
+				</button>
+			</li>
+			<li class="side-panel--menu__item">
+				<button class="side-panel--menu__btn">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+					Next 7 days
+					<small id="nextDaysTasksCounter">8</small>
+				</button>
+			</li>
+			<li class="side-panel--menu__item">
+				<button class="side-panel--menu__btn">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+					Archived
+				</button>
+			</li>
+		</ul>
+		<ul class="side-panel--categories">
+			<li class="side-panel--category">
+				<button class="side-panel--category__title">Personal</button>
+			</li>
+			<li class="side-panel--category">
+				<button class="side-panel--category__title">Work</button>
+			</li>
+		</ul>
+	</section>
 	<section class="main-panel">
-		<section class="main-panel--days">
-			<h2>Today</h2>
-		</section>
-		<section class="main-panel--tasks">
-			<ul class="main-panel--tasks__list">
-				<li class="main-panel--tasks__item">
-					<div>
-						<input type="checkbox" id="taskCheck">
-						<label class="main-panel--tasks__item--circle" for="taskCheck">&nbsp</label>
-						<label class="main-panel--tasks__item--text" for="taskCheck">Tea with Jacob</label>
-					</div>
-					<span class="main-panel--tasks__item--category">Personal</span>
-				</li>
-				<li class="main-panel--tasks__item">
-					<div>
-						<input type="checkbox" id="taskCheck">
-						<label class="main-panel--tasks__item--circle" for="taskCheck">&nbsp</label>
-						<label class="main-panel--tasks__item--text" for="taskCheck">Tea with Jacob</label>
-					</div>
-					<span class="main-panel--tasks__item--category">Personal</span>
-				</li>
-				<li class="main-panel--tasks__item">
-					<div>
-						<input type="checkbox" id="taskCheck">
-						<label class="main-panel--tasks__item--circle" for="taskCheck">&nbsp</label>
-						<label class="main-panel--tasks__item--text" for="taskCheck">Tea with Jacob</label>
-					</div>
-					<span class="main-panel--tasks__item--category">Personal</span>
-				</li>
-			</ul>
-		</section>
+		<div class="wrapper" id="taskWrapper"></div>
+		<button class="main-panel--add" id="mainPanelAddTaskBtn">
+			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+			<small>Add task</small>
+		</button>
 	</section>
 </main>
 
-<script src="/dist/main.js"></script>
+<script src="main.js" type="text/javascript"></script>
 </body>
 </html>

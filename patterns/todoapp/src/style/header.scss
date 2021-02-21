@@ -1,6 +1,6 @@
 .header {
     background-color: $color-main;
-    padding: $size-sm * 0.75 $size-lg * 2;
+    padding: $size-sm * 0.75 $size-lg * 2 $size-sm $size-lg * 1.25;
     display: flex;
 
     &--logo {

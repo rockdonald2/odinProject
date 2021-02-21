@@ -1,0 +1,253 @@
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    width: 50rem;
+    background-color: $color-white;
+    border-radius: 2.5rem;
+    z-index: -1;
+    opacity: 0;
+    @include layeredSmoothShadow;
+    @include transitionAll;
+
+    &.active {
+        z-index: 75;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    &--field, &--task {
+        margin: $size-md $size-lg;
+        padding: $size-sm;
+
+        &.hidden {
+            display: none;
+        }
+    }
+
+    &--field {
+        text-align: center;
+        font-size: 1.8rem;
+        border: none;
+        color: $color-main;
+    }
+
+    &--title {
+        width: 100%;
+        padding: $size-sm;
+        margin-bottom: $size-sm;
+        border-bottom: 1px solid $color-darkgrey;
+    }
+
+    &--form {
+        &__title, &__note {
+            input[type="text"], textarea {
+                border: none;
+                border-bottom: 2px solid $color-main;
+                border-radius: 5px;
+                padding: $size-md $size-sm $size-sm $size-sm;
+                width: 100%;
+                font-family: inherit;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+
+        &__title, &__note, &__time, &__category {
+            margin-bottom: $size-md;
+            position: relative;
+        }
+
+        &__title {
+            label {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                font-size: 1.6rem;
+                transform: translateY(-50%);
+                @include transitionAll;
+            }
+
+            input[type="text"] {
+                &:focus, &:active, &:valid {
+                    & + label {
+                        top: 12.5px;
+                        font-size: 1.2rem;
+                    }
+                }
+            }
+        }
+
+        &__note {
+            textarea {
+                resize: none;
+                width: 100%;
+                height: 15rem;
+
+                &:focus, &:active, &:valid {
+                    & + label {
+                        top: 5px;
+                        font-size: 1.2rem;
+                    }
+                }
+            }
+
+            label {
+                position: absolute;
+                left: 10px;
+                top: 10%;
+                font-size: 1.6rem;
+                @include transitionAll;
+            }
+        }
+
+        &__time, &__category {
+            button {
+                border: none;
+                background: none;
+                @include flexHorizontalCenterize;
+                padding: 0 $size-sm;
+                cursor: pointer;
+                @include transitionAll;
+
+                &.hidden {
+                    display: none;
+                }
+
+                svg {
+                    width: $size-md;
+                    height: $size-md;
+                    margin-right: $size-sm;
+                    stroke: $color-main;
+                }
+
+                &:hover, &:focus {
+                    color: $color-main;
+                }
+            }
+
+            div {
+                width: 100%;
+                @include flexHorizontalCenterize;
+
+                &.hidden {
+                    display: none;
+                }
+
+                label, input[type="date"] {
+                    height: 3.5rem;
+                }
+
+                label {
+                    width: 30%;
+                    background-color: $color-main;
+                    color: #fff;
+                    padding: $size-sm / 2 $size-sm;
+                    font-size: 1.4rem;
+                    border-bottom-left-radius: 5rem;
+                    border-top-left-radius: 5rem;
+                }
+
+                input[type="date"] {
+                    width: 70%;
+                    padding: $size-sm / 2 $size-sm;
+                    border: none;
+                    border-bottom-right-radius: 5rem;
+                    border-top-right-radius: 5rem;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                input[type="color"], input[type="text"] {
+                    border: none;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                input[type="color"] {
+                    width: 20%;
+                    height: 4.25rem;
+                    background: none;
+                }
+
+                input[type="text"] {
+                    width: 50%;
+                    height: 3.5rem;
+                    border-bottom-right-radius: 5rem;
+                    border-top-right-radius: 5rem;
+                    padding: 0 $size-sm;
+
+                    
+                }
+            }
+        }
+    }
+
+    &--task {
+        &__title {
+            font-size: 1.8rem;
+            text-align: center;
+            padding-bottom: $size-sm;
+            margin-bottom: $size-md;
+            border-bottom: 1px solid $color-darkgrey;
+            color: $color-main;
+        }
+
+        &__description {
+            font-size: 1.4rem;
+            margin-bottom: $size-md;
+        }
+
+        &__bar {
+            width: 100%;
+            @include flexHorizontalCenterize;
+            justify-content: space-between;
+
+            &--duetime, &--category {
+                text-align: center;
+                flex: 1;
+                background-color: $color-main;
+                color: #fff;
+                font-size: 1.2rem;
+                padding: $size-sm / 2 0;
+            }
+
+            &--duetime {
+                border-top-left-radius: 5rem;
+                border-bottom-left-radius: 5rem;
+            }
+
+            &--category {
+                border-top-right-radius: 5rem;
+                border-bottom-right-radius: 5rem;
+            }
+        }
+    }
+
+    #taskSubmitBtn {
+        width: 100%;
+        padding: $size-sm;
+        border: 1px solid $color-main;
+        border-radius: 5rem;
+        color: $color-main;
+        cursor: pointer;
+        background-color: #fff;
+        letter-spacing: .05em;
+        @include transitionAll;
+        font-size: 1.6rem;
+
+        &:hover, &:focus {
+            outline: none;
+            color: #fff;
+            background-color: $color-main;
+            @include layeredSmoothShadow;
+        }
+    }
+}
