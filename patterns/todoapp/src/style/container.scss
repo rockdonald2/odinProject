@@ -1,0 +1,96 @@
+.container {
+    width: 100%;
+    min-height: calc(100vh - 60px);
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+.side-panel {
+    background-color: $color-white;
+    border-right: 1px solid $color-grey;
+}
+
+.main-panel {
+    padding: $size-md $size-lg;
+
+    &--days {
+        h2 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid $color-grey;
+            padding: 0 0 $size-sm * 0.75 $size-sm * 0.75;
+        }
+    }
+
+    &--tasks {
+        padding: $size-md $size-sm;
+
+        &__list {
+            list-style-type: none;
+        }
+
+        &__item {
+            @include flexHorizontalCenterize;
+            margin-bottom: $size-sm * 1.25;
+            padding-bottom: $size-sm * 1.25;
+            border-bottom: 1px solid $color-grey;
+
+            div {
+                @include flexHorizontalCenterize;
+                width: 90%;
+            }
+
+            input[type="checkbox"] {
+                display: none;
+
+                &:checked {
+                    & + label {
+                        background-color: rgba($color-main, .5);
+                        text-decoration: none !important;
+                    }
+
+                    & ~ label {
+                        text-decoration: line-through;
+                        color: $color-darkgrey;
+                    }
+                }
+            }
+
+            &--circle, &--text {
+                user-select: none;
+            }
+
+            &--circle {
+                width: $size-md * 0.75;
+                height: $size-md * 0.75;
+                border: 1px solid $color-main;
+                border-radius: 50%;
+                margin-right: $size-sm;
+                @include transitionAll;
+            }
+
+            &--text {
+                font-size: 1.4rem;
+            }
+
+            &--category {
+                font-size: 1.2rem;
+                width: 10%;
+                text-align: right;
+                @include flexHorizontalCenterize;
+
+                &::before {
+                    content: "";
+                    width: $size-sm;
+                    height: $size-sm;
+                    border-radius: 50%;
+                    background-color: $color-main;
+                    display: inline-block;
+                    margin-right: $size-sm / 2;
+                    margin-top: 2px;
+                }
+            }
+        }
+    }
+}
