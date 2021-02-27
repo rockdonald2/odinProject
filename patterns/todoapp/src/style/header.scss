@@ -48,7 +48,7 @@
                 background-color: transparent;
                 color: $color-white;
                 font-size: 1.4rem;
-                @include transitionAll;
+                @include transition(all);
 
                 &::placeholder {
                     color: $color-white;
@@ -78,7 +78,7 @@
                 left: $size-md * 0.75;
                 top: 52.5%;
                 transform: translateY(-50%);
-                @include transitionAll;
+                @include transition(all);
 
                 svg {
                     width: $size-md * 0.8;
@@ -118,7 +118,7 @@
 
             svg {
                 stroke: $color-main;
-                @include transitionAll;
+                @include transition(all);
             }
 
             &:focus, &:hover {

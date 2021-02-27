@@ -14,15 +14,17 @@
         list-style-type: none;
         padding-bottom: $size-md;
         margin-bottom: $size-md;
-        border-bottom: 1px solid $color-darkgrey;
+        border-bottom: 1px solid $color-grey;
 
         &__item {
             border-top-left-radius: 2.5rem;
             border-bottom-left-radius: 2.5rem;
-            @include transitionAll;
+            @include transition(all);
 
-            &:hover, &:focus, &.active {
-                background-color: rgba($color-darkgrey, .25);
+            &:hover,
+            &:focus,
+            &.active {
+                background-color: rgba($color-darkgrey, .15);
             }
 
             &.active {
@@ -92,20 +94,126 @@
     }
 
     &--categories {
-        list-style-type: none;
+        #categoryWrapper {
+            list-style-type: none;
+        }
+
+        &__addCategory {
+            #addCategoryBtn {
+                @include flexHorizontalCenterize;
+                padding: $size-sm / 2 $size-md;
+                border: none;
+                background: none;
+                width: 100%;
+                font-size: 1.4rem;
+                margin-top: $size-md;
+                @include transition(all);
+                cursor: pointer;
+                color: $color-darkgrey;
+
+                svg {
+                    width: $size-md;
+                    height: $size-md;
+                    margin-right: $size-sm * 1.15;
+                    stroke: $color-main;
+                    @include transition(all);
+                }
+
+                &:focus {
+                    outline: none;
+                }
+
+                &:focus,
+                &:hover {
+                    color: $color-main;
+
+                    svg {
+                        transform: rotate(90deg);
+                    }
+                }
+            }
+
+            & > div {
+                margin-top: $size-md;
+                padding-top: $size-md;
+                border-top: 1px solid $color-grey;
+                width: 100%;
+                @include flexHorizontalCenterize;
+                flex-direction: column;
+                @include transition(all);
+                opacity: 1;
+
+                &.hidden {
+                    z-index: -1;
+                    opacity: 0;
+                }
+
+                label {
+                    width: 75%;
+                    background-color: $color-main;
+                    color: #fff;
+                    padding: $size-sm / 2 $size-sm;
+                    font-size: 1.4rem;
+                    border-top-left-radius: 1rem;
+                    border-top-right-radius: 1rem;
+                    @include flexCenterize;
+                    text-align: center;
+                }
+
+                form {
+                    width: 75%;
+                    border: 1px solid rgba($color-darkgrey, .75);
+                    border-top: none;
+                    @include flexHorizontalCenterize;
+
+                    input[type="text"] {
+                        width: 90%;
+                        padding: $size-sm / 2 $size-sm;
+                        border: none;
+                        font-family: inherit;
+                        height: $size-md;
+
+                        &:focus {
+                            outline: none;
+                        }
+                    }
+
+                    button {
+                        border: none;
+                        background: none;
+                        cursor: pointer;
+                        @include flexCenterize;
+                        width: 10%;
+                        height: $size-md;
+
+                        &:focus {
+                            outline: none;
+                        }
+
+                        svg {
+                            width: $size-sm * 1.25;
+                            height: $size-sm * 1.25;
+                            stroke: $color-main;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     &--category {
         border-top-left-radius: 2.5rem;
         border-bottom-left-radius: 2.5rem;
-        @include transitionAll;
+        @include transition(all);
 
         &:not(:last-of-type) {
             margin-bottom: $size-sm;
         }
 
-        &:hover, &:focus, &.active {
-            background-color: rgba($color-darkgrey, .25);
+        &:hover,
+        &:focus,
+        &.active {
+            background-color: rgba($color-darkgrey, .15);
         }
 
         &.active {
@@ -127,7 +235,7 @@
                 outline: none;
             }
 
-            &::before {
+            span {
                 content: "";
                 width: $size-sm * 1.25;
                 height: $size-sm * 1.25;
@@ -136,7 +244,6 @@
                 display: inline-block;
                 margin-left: 5px;
                 margin-right: $size-sm * 1.5;
-                margin-top: 1px;
             }
         }
     }
@@ -164,19 +271,22 @@
 
         &__item {
             @include flexHorizontalCenterize;
+            justify-content: space-between;
             margin-bottom: $size-sm;
             border-radius: 2.5rem;
-            @include transitionAll;
+            @include transition(all);
             padding: 0 $size-sm;
+            position: relative;
 
-            &:hover, &:focus {
-                background-color: rgba($color-grey, .25);
+            &:hover,
+            &:focus {
+                background-color: rgba($color-grey, .15);
             }
 
             &--title {
                 @include flexHorizontalCenterize;
-                width: 70%;
-                
+                width: 50%;
+
                 input[type="checkbox"] {
                     display: none;
 
@@ -192,18 +302,26 @@
                         }
                     }
                 }
+
+                &+div {
+                    display: flex;
+                    align-items: center;
+                }
             }
 
-            &--circle, &--text {
+            &--circle,
+            &--text {
                 cursor: pointer;
             }
 
-            &--circle, &--text, &--category {
+            &--circle,
+            &--text,
+            &--category {
                 -webkit-user-select: none;
-                   -moz-user-select: none;
-                    -ms-user-select: none;
-                        user-select: none;
-                @include transitionAll;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                @include transition(all);
             }
 
             &--circle {
@@ -229,15 +347,14 @@
                 user-select: none;
             }
 
+            &--info,
             &--more {
-                width: $size-md;
-                height: $size-md;
+                width: $size-md / 1.15;
+                height: $size-md / 1.15;
                 border: none;
                 background: none;
                 cursor: pointer;
-                margin-right: $size-sm;
-                margin-left: auto;
-                @include transitionAll;
+                @include transition(all);
 
                 &:focus {
                     outline: none;
@@ -247,17 +364,23 @@
                     stroke: $color-darkgrey;
                 }
 
-                &:focus, &:hover {
+                &:focus,
+                &:hover {
                     svg {
                         stroke: $color-main;
                     }
                 }
             }
 
+            &--info {
+                margin-right: $size-sm;
+            }
+
             &--category {
                 font-size: 1.2rem;
                 text-align: right;
                 @include flexHorizontalCenterize;
+                margin: 0 $size-md;
 
                 span {
                     &:nth-of-type(1) {
@@ -266,11 +389,88 @@
                         border-radius: 50%;
                         display: inline-block;
                         margin-right: $size-sm / 2;
-                    } 
+                    }
 
                     &:nth-of-type(2) {
                         color: $color-darkgrey;
                         font-weight: 300;
+                    }
+                }
+            }
+
+            &--dropdown {
+                @include flexHorizontalCenterize;
+
+                &:hover,
+                &:focus {
+                    & > .main-panel--tasks__item--dropdown__list {
+                        opacity: 1;
+                        z-index: 0;
+                    }
+                }
+
+
+                &__list {
+                    list-style-type: none;
+                    position: absolute;
+                    right: 0;
+                    top: 100%;
+                    background-color: rgba($color-grey, .25);
+                    padding: $size-sm;
+                    border-radius: 1rem;
+                    @include layeredSmoothShadow;
+                    @include transition(all);
+                    z-index: -1;
+                    opacity: 0;
+
+                    &::after {
+                        content: "";
+                        border-color: transparent transparent rgba($color-grey, .25) transparent;
+                        border-width: 0.75rem;
+                        border-style: solid;
+                        display: none;
+                        position: absolute;
+                        top: -1.5rem;
+                        right: 1.5rem;
+                    }
+                }
+
+                &__item {
+                    &:not(:last-of-type) {
+                        margin-bottom: $size-sm * 1.5;
+                    }
+
+                    button {
+                        @include flexHorizontalCenterize;
+                        border: none;
+                        background: none;
+                        cursor: pointer;
+                        width: 100%;
+                        @include transition(all);
+                        font-size: 1.3rem;
+                        color: $color-darkgrey;
+                        padding: 0 $size-sm;
+
+                        svg {
+                            width: $size-sm * 1.25;
+                            height: $size-sm * 1.25;
+                            margin-right: $size-sm / 2;
+                            @include transition(all);
+                            stroke: $color-darkgrey;
+                        }
+
+                        &:focus {
+                            outline: none;
+                        }
+
+                        &:focus,
+                        &:hover {
+                            color: $color-main;
+
+                            svg {
+                                stroke: $color-main;
+                            }
+                        }
                     }
                 }
             }
@@ -285,13 +485,14 @@
         cursor: pointer;
         padding: $size-sm $size-sm $size-sm $size-sm * 0.8;
         border-radius: 2.5rem;
-        @include transitionAll;
+        @include transition(all);
 
         &:focus {
             outline: none;
         }
 
-        &:focus, &:hover {
+        &:focus,
+        &:hover {
             small {
                 color: $color-main;
             }
@@ -301,8 +502,9 @@
             }
         }
 
-        small, svg {
-            @include transitionAll;
+        small,
+        svg {
+            @include transition(all);
         }
 
         small {

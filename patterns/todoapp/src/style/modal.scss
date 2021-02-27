@@ -9,7 +9,7 @@
     z-index: -1;
     opacity: 0;
     @include layeredSmoothShadow;
-    @include transitionAll;
+    @include transition(all);
 
     &.active {
         z-index: 75;
@@ -68,7 +68,7 @@
                 top: 50%;
                 font-size: 1.6rem;
                 transform: translateY(-50%);
-                @include transitionAll;
+                @include transition(all);
             }
 
             input[type="text"] {
@@ -77,6 +77,28 @@
                         top: 12.5px;
                         font-size: 1.2rem;
                     }
+                }
+            }
+
+            &--error {
+                @include flexCenterize;
+                margin-left: $size-sm;
+                color: #ff4757;
+                opacity: 1;
+                @include transition(opacity);
+                height: initial;
+
+                svg {
+                    width: $size-sm * 1.5;
+                    height: $size-sm * 1.5;
+                    margin-right: $size-sm / 2;
+                    stroke: #ff4757;
+                }
+
+                &.hidden {
+                    z-index: -1;
+                    opacity: 0;
+                    height: 0;
                 }
             }
         }
@@ -100,7 +122,7 @@
                 left: 10px;
                 top: 10%;
                 font-size: 1.6rem;
-                @include transitionAll;
+                @include transition(all);
             }
         }
 
@@ -111,7 +133,7 @@
                 @include flexHorizontalCenterize;
                 padding: 0 $size-sm;
                 cursor: pointer;
-                @include transitionAll;
+                @include transition(all);
 
                 &.hidden {
                     display: none;
@@ -149,42 +171,46 @@
                     font-size: 1.4rem;
                     border-bottom-left-radius: 5rem;
                     border-top-left-radius: 5rem;
+                    @include flexCenterize;
                 }
 
                 input[type="date"] {
                     width: 70%;
                     padding: $size-sm / 2 $size-sm;
-                    border: none;
-                    border-bottom-right-radius: 5rem;
-                    border-top-right-radius: 5rem;
+                }
+
+                input[type="date"], select {
+                    border: 1px solid $color-grey;
 
                     &:focus {
                         outline: none;
                     }
-                }
 
-                input[type="color"], input[type="text"] {
-                    border: none;
+                    & + button {
+                        border-bottom-right-radius: 5rem;
+                        border-top-right-radius: 5rem;
+                        border: 1px solid $color-grey;
+                        border-left: none;
+                        padding: $size-sm / 3.5 $size-sm;
 
-                    &:focus {
-                        outline: none;
+                        svg {
+                            margin-right: $size-sm / 4;
+                        }
+
+                        &:focus {
+                            outline: none;
+                        }
                     }
                 }
 
-                input[type="color"] {
-                    width: 20%;
-                    height: 4.25rem;
-                    background: none;
-                }
-
-                input[type="text"] {
-                    width: 50%;
+                select {
+                    width: 70%;
                     height: 3.5rem;
-                    border-bottom-right-radius: 5rem;
-                    border-top-right-radius: 5rem;
                     padding: 0 $size-sm;
 
-                    
+                    option {
+                        @include flexHorizontalCenterize;
+                    }
                 }
             }
         }
@@ -240,7 +266,7 @@
         cursor: pointer;
         background-color: #fff;
         letter-spacing: .05em;
-        @include transitionAll;
+        @include transition(all);
         font-size: 1.6rem;
 
         &:hover, &:focus {
