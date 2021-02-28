@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
 *,
 *::before,
 *::after {
@@ -19,7 +19,7 @@ body {
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Lato', sans-serif;
   position: relative; }
 
 .header {
@@ -142,23 +142,19 @@ body {
 
 .side-panel {
   background-color: #ffffff;
-  border-right: 1px solid #a4b0be;
+  border-right: 1px solid #d1ccc0;
   padding: 5rem 0 5rem 5rem; }
   .side-panel--menu {
     list-style-type: none;
     padding-bottom: 2.5rem;
     margin-bottom: 2.5rem;
-    border-bottom: 1px solid #a4b0be; }
+    border-bottom: 1px solid #d1ccc0; }
     .side-panel--menu__item {
       border-top-left-radius: 2.5rem;
       border-bottom-left-radius: 2.5rem;
       transition: all 0.25s; }
       .side-panel--menu__item:hover, .side-panel--menu__item:focus, .side-panel--menu__item.active {
-        background-color: rgba(113, 116, 122, 0.15); }
-      .side-panel--menu__item.active .side-panel--menu__btn {
-        font-weight: bold; }
-        .side-panel--menu__item.active .side-panel--menu__btn small {
-          font-weight: normal; }
+        background-color: rgba(132, 129, 122, 0.15); }
       .side-panel--menu__item:not(:last-of-type) {
         margin-bottom: 1.25rem; }
       .side-panel--menu__item:nth-of-type(1) svg {
@@ -178,10 +174,14 @@ body {
       align-items: center;
       width: 100%;
       cursor: pointer; }
+      .side-panel--menu__btn.active {
+        font-weight: bold; }
+        .side-panel--menu__btn.active small {
+          font-weight: normal; }
       .side-panel--menu__btn small {
         font-size: 1.2rem;
         margin-left: 1.25rem;
-        color: #71747a; }
+        color: #84817a; }
       .side-panel--menu__btn svg {
         width: 2.5rem;
         height: 2.5rem;
@@ -201,7 +201,7 @@ body {
     margin-top: 2.5rem;
     transition: all 0.25s;
     cursor: pointer;
-    color: #71747a; }
+    color: #84817a; }
     .side-panel--categories__addCategory #addCategoryBtn svg {
       width: 2.5rem;
       height: 2.5rem;
@@ -217,7 +217,7 @@ body {
   .side-panel--categories__addCategory > div {
     margin-top: 2.5rem;
     padding-top: 2.5rem;
-    border-top: 1px solid #a4b0be;
+    border-top: 1px solid #d1ccc0;
     width: 100%;
     display: flex;
     align-items: center;
@@ -241,7 +241,7 @@ body {
       text-align: center; }
     .side-panel--categories__addCategory > div form {
       width: 75%;
-      border: 1px solid rgba(113, 116, 122, 0.75);
+      border: 1px solid rgba(132, 129, 122, 0.75);
       border-top: none;
       display: flex;
       align-items: center; }
@@ -271,11 +271,15 @@ body {
   .side-panel--category {
     border-top-left-radius: 2.5rem;
     border-bottom-left-radius: 2.5rem;
-    transition: all 0.25s; }
+    transition: all 0.25s;
+    display: flex;
+    align-items: center; }
     .side-panel--category:not(:last-of-type) {
       margin-bottom: 1.25rem; }
     .side-panel--category:hover, .side-panel--category:focus, .side-panel--category.active {
-      background-color: rgba(113, 116, 122, 0.15); }
+      background-color: rgba(132, 129, 122, 0.15); }
+      .side-panel--category:hover .side-panel--category__del, .side-panel--category:focus .side-panel--category__del, .side-panel--category.active .side-panel--category__del {
+        opacity: 1; }
     .side-panel--category.active .side-panel--category__title {
       font-weight: bold; }
     .side-panel--category__title {
@@ -298,6 +302,24 @@ body {
         display: inline-block;
         margin-left: 5px;
         margin-right: 1.875rem; }
+    .side-panel--category__del {
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 1.25rem;
+      opacity: 0;
+      transition: all 0.25s; }
+      .side-panel--category__del svg {
+        width: 1.6875rem;
+        height: 1.6875rem;
+        stroke: #d1ccc0; }
+      .side-panel--category__del:hover, .side-panel--category__del:focus {
+        outline: none; }
+        .side-panel--category__del:hover svg, .side-panel--category__del:focus svg {
+          stroke: #84817a; }
 
 .main-panel {
   padding: 2.5rem 5rem; }
@@ -305,7 +327,7 @@ body {
     font-size: 2.4rem;
     font-weight: 600;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid #a4b0be;
+    border-bottom: 1px solid #d1ccc0;
     padding: 0 0 0.9375rem 0.9375rem; }
   .main-panel--tasks {
     padding: 1.25rem; }
@@ -321,7 +343,7 @@ body {
       padding: 0 1.25rem;
       position: relative; }
       .main-panel--tasks__item:hover, .main-panel--tasks__item:focus {
-        background-color: rgba(164, 176, 190, 0.15); }
+        background-color: rgba(209, 204, 192, 0.15); }
       .main-panel--tasks__item--title {
         display: flex;
         align-items: center;
@@ -329,11 +351,11 @@ body {
         .main-panel--tasks__item--title input[type="checkbox"] {
           display: none; }
           .main-panel--tasks__item--title input[type="checkbox"]:checked + label {
-            background-color: rgba(113, 116, 122, 0.5);
+            background-color: rgba(132, 129, 122, 0.5);
             text-decoration: none !important; }
           .main-panel--tasks__item--title input[type="checkbox"]:checked ~ label {
             text-decoration: line-through;
-            color: #71747a; }
+            color: #84817a; }
         .main-panel--tasks__item--title + div {
           display: flex;
           align-items: center; }
@@ -372,7 +394,7 @@ body {
         .main-panel--tasks__item--info:focus, .main-panel--tasks__item--more:focus {
           outline: none; }
         .main-panel--tasks__item--info svg, .main-panel--tasks__item--more svg {
-          stroke: #71747a; }
+          stroke: #84817a; }
         .main-panel--tasks__item--info:focus svg, .main-panel--tasks__item--info:hover svg, .main-panel--tasks__item--more:focus svg, .main-panel--tasks__item--more:hover svg {
           stroke: #70a1ff; }
       .main-panel--tasks__item--info {
@@ -390,21 +412,20 @@ body {
           display: inline-block;
           margin-right: 0.625rem; }
         .main-panel--tasks__item--category span:nth-of-type(2) {
-          color: #71747a;
+          color: #84817a;
           font-weight: 300; }
       .main-panel--tasks__item--dropdown {
         display: flex;
         align-items: center; }
         .main-panel--tasks__item--dropdown:hover > .main-panel--tasks__item--dropdown__list, .main-panel--tasks__item--dropdown:focus > .main-panel--tasks__item--dropdown__list {
           opacity: 1;
-          z-index: 0; }
+          z-index: 1; }
         .main-panel--tasks__item--dropdown__list {
           list-style-type: none;
           position: absolute;
           right: 0;
           top: 100%;
-          background-color: rgba(164, 176, 190, 0.25);
-          padding: 1.25rem;
+          background-color: #ffffff;
           border-radius: 1rem;
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07), 0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07), 0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07);
           transition: all 0.25s;
@@ -412,15 +433,13 @@ body {
           opacity: 0; }
           .main-panel--tasks__item--dropdown__list::after {
             content: "";
-            border-color: transparent transparent rgba(164, 176, 190, 0.25) transparent;
+            border-color: transparent transparent #ffffff transparent;
             border-width: 0.75rem;
             border-style: solid;
-            display: none;
+            display: block;
             position: absolute;
             top: -1.5rem;
             right: 1.5rem; }
-        .main-panel--tasks__item--dropdown__item:not(:last-of-type) {
-          margin-bottom: 1.875rem; }
         .main-panel--tasks__item--dropdown__item button {
           display: flex;
           align-items: center;
@@ -430,14 +449,14 @@ body {
           width: 100%;
           transition: all 0.25s;
           font-size: 1.3rem;
-          color: #71747a;
-          padding: 0 1.25rem; }
+          color: #84817a;
+          padding: 1.25rem 2.5rem; }
           .main-panel--tasks__item--dropdown__item button svg {
             width: 1.5625rem;
             height: 1.5625rem;
             margin-right: 0.625rem;
             transition: all 0.25s;
-            stroke: #71747a; }
+            stroke: #84817a; }
           .main-panel--tasks__item--dropdown__item button:focus {
             outline: none; }
           .main-panel--tasks__item--dropdown__item button:focus, .main-panel--tasks__item--dropdown__item button:hover {
@@ -467,7 +486,7 @@ body {
       display: inline-block;
       font-size: 1.4rem;
       margin-left: 0.9375rem;
-      color: #71747a; }
+      color: #84817a; }
     .main-panel--add svg {
       width: 2.5rem;
       height: 2.5rem;
@@ -479,7 +498,7 @@ body {
   bottom: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(113, 116, 122, 0.25);
+  background-color: rgba(132, 129, 122, 0.25);
   backdrop-filter: blur(6px);
   z-index: -1;
   opacity: 0;
@@ -518,7 +537,7 @@ body {
     width: 100%;
     padding: 1.25rem;
     margin-bottom: 1.25rem;
-    border-bottom: 1px solid #71747a; }
+    border-bottom: 1px solid #84817a; }
   .modal--form__title input[type="text"], .modal--form__title textarea, .modal--form__note input[type="text"], .modal--form__note textarea {
     border: none;
     border-bottom: 2px solid #70a1ff;
@@ -612,13 +631,13 @@ body {
       width: 70%;
       padding: 0.625rem 1.25rem; }
     .modal--form__time div input[type="date"], .modal--form__time div select, .modal--form__category div input[type="date"], .modal--form__category div select {
-      border: 1px solid #a4b0be; }
+      border: 1px solid #d1ccc0; }
       .modal--form__time div input[type="date"]:focus, .modal--form__time div select:focus, .modal--form__category div input[type="date"]:focus, .modal--form__category div select:focus {
         outline: none; }
       .modal--form__time div input[type="date"] + button, .modal--form__time div select + button, .modal--form__category div input[type="date"] + button, .modal--form__category div select + button {
         border-bottom-right-radius: 5rem;
         border-top-right-radius: 5rem;
-        border: 1px solid #a4b0be;
+        border: 1px solid #d1ccc0;
         border-left: none;
         padding: 0.35714rem 1.25rem; }
         .modal--form__time div input[type="date"] + button svg, .modal--form__time div select + button svg, .modal--form__category div input[type="date"] + button svg, .modal--form__category div select + button svg {
@@ -637,7 +656,7 @@ body {
     text-align: center;
     padding-bottom: 1.25rem;
     margin-bottom: 2.5rem;
-    border-bottom: 1px solid #71747a;
+    border-bottom: 1px solid #84817a;
     color: #70a1ff; }
   .modal--task__description {
     font-size: 1.4rem;
@@ -676,3 +695,35 @@ body {
       color: #fff;
       background-color: #70a1ff;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07), 0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07), 0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07); }
+
+.popup {
+  width: 30rem;
+  position: absolute;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07), 0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07), 0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07);
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  top: -25%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 1.25rem;
+  transition: all .5s; }
+  .popup.show {
+    top: 0; }
+  .popup--title, .popup--msg {
+    margin-bottom: 1.25rem; }
+  .popup--title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #70a1ff; }
+    .popup--title h3 {
+      font-size: 2.2rem; }
+    .popup--title svg {
+      width: 3.125rem;
+      height: 3.125rem;
+      margin-right: 1.25rem; }
+  .popup--msg {
+    font-size: 1.4rem;
+    text-align: center; }

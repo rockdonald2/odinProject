@@ -1,0 +1,43 @@
+.popup {
+    width: 30rem;
+    position: absolute;
+    background-color: $color-white;
+    @include layeredSmoothShadow;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    top: -25%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    padding: $size-sm;
+    transition: all .5s;
+
+    &.show {
+        top: 0;
+    }
+
+    &--title, 
+    &--msg {
+        margin-bottom: $size-sm;
+    }
+
+    &--title {
+        @include flexCenterize;
+        color: $color-main;
+
+        h3 {
+            font-size: 2.2rem;
+        }
+
+        svg {
+            width: $size-md * 1.25;
+            height: $size-md * 1.25;
+            margin-right: $size-sm;
+        }
+    }
+
+    &--msg {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+}

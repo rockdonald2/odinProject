@@ -15,6 +15,23 @@
 
 	<body>
 
+		<div class="popup">
+			<div class="popup--title">
+				<svg class="w-6 h-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg">
+					<path stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+				</svg>
+				<h3>Info</h3>
+			</div>
+			<p class="popup--msg" id="popupMsg"></p>
+		</div>
+
 		<div class="overlay"></div>
 		<div class="modal">
 			<fieldset class="modal--field hidden"
@@ -159,8 +176,10 @@
 							d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
 					</svg>
 				</button>
-				<button class="header--btns__uncompleted">
-					<span class="header--btns__uncompleted--dot">2</span>
+				<button class="header--btns__uncompleted"
+					data-filter="All"
+					data-filtertype="menu">
+					<span class="header--btns__uncompleted--dot" data-counter="uncompleted"></span>
 					<svg class="w-6 h-6"
 						fill="none"
 						stroke="currentColor"
@@ -173,7 +192,9 @@
 						</path>
 					</svg>
 				</button>
-				<button class="header--btns__archive">
+				<button class="header--btns__archive"
+					data-filter="Archived"
+					data-filtertype="menu">
 					<svg class="w-6 h-6"
 						fill="none"
 						stroke="currentColor"
@@ -194,8 +215,8 @@
 		<main class="container">
 			<nav class="side-panel">
 				<ul class="side-panel--menu">
-					<li class="side-panel--menu__item active">
-						<button class="side-panel--menu__btn">
+					<li class="side-panel--menu__item">
+						<button class="side-panel--menu__btn active" id="allTasksFilter" data-filter="All" data-filtertype="menu">
 							<svg class="w-6 h-6"
 								fill="none"
 								stroke="currentColor"
@@ -208,11 +229,11 @@
 								</path>
 							</svg>
 							All tasks
-							<small id="allTasksCounter">8</small>
+							<small id="allTasksCounter" data-counter="uncompleted"></small>
 						</button>
 					</li>
 					<li class="side-panel--menu__item">
-						<button class="side-panel--menu__btn">
+						<button class="side-panel--menu__btn" id="todayTasksFilter" data-filter="Today" data-filtertype="menu">
 							<svg class="w-6 h-6"
 								fill="none"
 								stroke="currentColor"
@@ -225,11 +246,11 @@
 								</path>
 							</svg>
 							Today
-							<small id="todayTasksCounter">8</small>
+							<small id="todayTasksCounter" data-counter="today"></small>
 						</button>
 					</li>
 					<li class="side-panel--menu__item">
-						<button class="side-panel--menu__btn">
+						<button class="side-panel--menu__btn" id="next7DaysTasksFilter" data-filter="Next 7 Days" data-filtertype="menu">
 							<svg class="w-6 h-6"
 								fill="none"
 								stroke="currentColor"
@@ -242,11 +263,11 @@
 								</path>
 							</svg>
 							Next 7 days
-							<small id="nextDaysTasksCounter">8</small>
+							<small id="nextDaysTasksCounter" data-counter="nextSevenDays"></small>
 						</button>
 					</li>
 					<li class="side-panel--menu__item">
-						<button class="side-panel--menu__btn">
+						<button class="side-panel--menu__btn" id="archivedTasksFilter" data-filter="Archived" data-filtertype="menu">
 							<svg class="w-6 h-6"
 								fill="none"
 								stroke="currentColor"

@@ -27,16 +27,6 @@
                 background-color: rgba($color-darkgrey, .15);
             }
 
-            &.active {
-                .side-panel--menu__btn {
-                    font-weight: bold;
-
-                    small {
-                        font-weight: normal;
-                    }
-                }
-            }
-
             &:not(:last-of-type) {
                 margin-bottom: $size-sm;
             }
@@ -74,6 +64,14 @@
             @include flexHorizontalCenterize;
             width: 100%;
             cursor: pointer;
+
+            &.active {
+                font-weight: bold;
+
+                small {
+                    font-weight: normal;
+                }
+            }
 
             small {
                 font-size: 1.2rem;
@@ -205,6 +203,7 @@
         border-top-left-radius: 2.5rem;
         border-bottom-left-radius: 2.5rem;
         @include transition(all);
+        @include flexHorizontalCenterize;
 
         &:not(:last-of-type) {
             margin-bottom: $size-sm;
@@ -214,6 +213,10 @@
         &:focus,
         &.active {
             background-color: rgba($color-darkgrey, .15);
+
+            .side-panel--category__del {
+                opacity: 1;
+            }
         }
 
         &.active {
@@ -244,6 +247,31 @@
                 display: inline-block;
                 margin-left: 5px;
                 margin-right: $size-sm * 1.5;
+            }
+        }
+
+        &__del {
+            border: none;
+            background: none;
+            cursor: pointer;
+            @include flexCenterize;
+            padding: 0 $size-sm;
+            opacity: 0;
+            @include transition(all);
+
+            svg {
+                width: $size-sm * 1.35;
+                height: $size-sm * 1.35;
+                stroke: $color-grey;
+            }
+
+            &:hover,
+            &:focus {
+                outline: none;
+
+                svg {
+                    stroke: $color-darkgrey;
+                }
             }
         }
     }
@@ -405,7 +433,7 @@
                 &:focus {
                     & > .main-panel--tasks__item--dropdown__list {
                         opacity: 1;
-                        z-index: 0;
+                        z-index: 1;
                     }
                 }
 
@@ -415,8 +443,7 @@
                     position: absolute;
                     right: 0;
                     top: 100%;
-                    background-color: rgba($color-grey, .25);
-                    padding: $size-sm;
+                    background-color: $color-white;
                     border-radius: 1rem;
                     @include layeredSmoothShadow;
                     @include transition(all);
@@ -425,10 +452,10 @@
 
                     &::after {
                         content: "";
-                        border-color: transparent transparent rgba($color-grey, .25) transparent;
+                        border-color: transparent transparent $color-white transparent;
                         border-width: 0.75rem;
                         border-style: solid;
-                        display: none;
+                        display: block;
                         position: absolute;
                         top: -1.5rem;
                         right: 1.5rem;
@@ -436,10 +463,6 @@
                 }
 
                 &__item {
-                    &:not(:last-of-type) {
-                        margin-bottom: $size-sm * 1.5;
-                    }
-
                     button {
                         @include flexHorizontalCenterize;
                         border: none;
@@ -449,7 +472,7 @@
                         @include transition(all);
                         font-size: 1.3rem;
                         color: $color-darkgrey;
-                        padding: 0 $size-sm;
+                        padding: $size-sm $size-md;
 
                         svg {
                             width: $size-sm * 1.25;

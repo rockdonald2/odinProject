@@ -11,14 +11,29 @@ let taskController = (function () {
         }
     }
 
+    let idCounter = 0;
     class Task {
         constructor(title, note, dueTime, category) {
+            this.id = idCounter++;
             this.title = title;
             this.note = note;
             this.dueTime = dueTime;
             this.category = categories[category.name];
             this.isDone = false;
+            this.isArchived = false;
         }
+    }
+
+    function getTaskById(id) {
+        for (let i = 0; i < tasks.length; ++i) {
+            if (id == tasks[i]['id']) {
+                return tasks[i];
+            }
+        }
+    }
+
+    function getTasksByCategory(cat) {
+        return tasks.filter((task) => task.category ? task.category.name === cat : false);
     }
 
     function createTask(data) {
@@ -30,10 +45,14 @@ let taskController = (function () {
         } = data;
 
         tasks.push(new Task(title, note, dueTime, category));
+
+        saveToLocalStorage();
     }
 
     function createCategory(name) {
         categories[name] = new Category(colors[(Math.floor(Math.random() * (colors.length)))], name);
+
+        saveToLocalStorage();
     }
 
     function editTask(index, data) {
@@ -41,28 +60,55 @@ let taskController = (function () {
             if (key !== 'category') {
                 tasks[index][key] = data[key];
             } else {
-                tasks[index][key] = new Category(data[key]['color'], data[key]['name']);
+                tasks[index][key] = categories[data[key]['name']];
             }
         });
+
+        saveToLocalStorage();
     }
 
-    function createTaskDoms() {
+    function createTaskDoms(filter) {
         let untimed = "";
         let today = "";
         let tomorrow = "";
         let nextSevenDays = "";
+        let archived = "";
 
         const dateToday = new Date;
         const msPerDay = 24 * 60 * 60 * 1000;
 
-        tasks.forEach((task, i) => {
+        deleteOverDueTasks();
+
+        const [currentTime, currentCategory, currentTitleString] = filter.split('&');
+
+        tasks.filter((task) => {
+            if (currentCategory === '') {
+                return true;
+            } else {
+                if (task.category && task.category.name === currentCategory) {
+                    return true;
+                }
+            }
+
+            return false;
+        }).filter((task) => {
+            if (currentTitleString === '') {
+                return true;
+            } else {
+                if (task.title.toLowerCase().indexOf(currentTitleString) !== -1) {
+                    return true;
+                }
+            }
+
+            return false;
+        }).forEach((task, i) => {
             const taskDom = `
                     <li class="main-panel--tasks__item">
 						<div div class = "main-panel--tasks__item--title" >
-							<input type="checkbox" data-postindex="${i}" id="task${i}" ${task.isDone ? 'checked' : ''}>
+							<input type="checkbox" data-postindex="${task.id}" id="task${task.id}" ${task.isDone ? 'checked' : ''}>
 							<label class="main-panel--tasks__item--circle" 
-							       style="border-color: ${task.category ? task.category.color : COLOR_MAIN}" for="task${i}">&nbsp</label>
-							<label class="main-panel--tasks__item--text" for="task${i}">${task.title}</label>
+							       style="border-color: ${task.category ? task.category.color : COLOR_MAIN}" for="task${task.id}">&nbsp</label>
+							<label class="main-panel--tasks__item--text" for="task${task.id}">${task.title}</label>
 						</div>
 						<div>
                             <span class="main-panel--tasks__item--duetime">${task.dueTime === '' ? '' : 'Due ' + task.dueTime}</span>
@@ -70,7 +116,7 @@ let taskController = (function () {
                                 <span style="background-color: ${task.category ? task.category.color : COLOR_MAIN}">&nbsp;</span>
                                 <span>${task.category ? task.category.name : 'Uncategorized'}</span>
                             </div>
-                            <button class="main-panel--tasks__item--info" data-postindex="${i}">
+                            <button class="main-panel--tasks__item--info" data-postindex="${task.id}">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                             </button>
                             <div class="main-panel--tasks__item--dropdown">
@@ -79,7 +125,9 @@ let taskController = (function () {
                                 </button>
                                 <ul class="main-panel--tasks__item--dropdown__list">
                                     <li class="main-panel--tasks__item--dropdown__item">
-                                        <button button type = "button" class="main-panel--tasks__item--dropdown__edit" data-postindex = "${i}">
+                                        <button button button type="button"
+                                        class="main-panel--tasks__item--dropdown__edit"
+                                        data-postindex = "${task.id}">
                                             <svg class="w-6 h-6"
                                                 fill="none"
                                                 stroke="currentColor"
@@ -94,7 +142,15 @@ let taskController = (function () {
                                         </button>
                                     </li>
                                     <li class="main-panel--tasks__item--dropdown__item">
-                                        <button type="button" class="main-panel--tasks__item--dropdown__delete" data-postindex="${i}">
+                                        <button type="button"
+                                        class="main-panel--tasks__item--dropdown__archive"
+                                        data-postindex="${task.id}">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                                            Archive
+                                        </button>
+                                    </li>
+                                    <li class="main-panel--tasks__item--dropdown__item">
+                                        <button type="button" class="main-panel--tasks__item--dropdown__delete" data-postindex="${task.id}">
                                             <svg class="w-6 h-6"
                                                 fill="none"
                                                 stroke="currentColor"
@@ -115,12 +171,14 @@ let taskController = (function () {
 					</li>
                 `;
 
-            if (task.dueTime) {
-                const t = new Date(task.dueTime)
+            if (task.isArchived) {
+                archived += taskDom;
+            } else if (task.dueTime) {
+                const t = new Date(task.dueTime);
 
-                if ((t - dateToday) / msPerDay === 0) {
+                if ((t - dateToday) / msPerDay <= 0.5) {
                     today += taskDom;
-                } else if ((t - dateToday) / msPerDay === 1) {
+                } else if ((t - dateToday) / msPerDay <= 1) {
                     tomorrow += taskDom;
                 } else {
                     nextSevenDays += taskDom;
@@ -130,12 +188,31 @@ let taskController = (function () {
             }
         });
 
-        return {
-            'Today': today,
-            'Tomorrow': tomorrow,
-            'Next 7 Days': nextSevenDays,
-            'Untimed': untimed
-        };
+        switch (currentTime) {
+            case 'Today': {
+                return {
+                    'Today': today,
+                }
+            }
+            case 'Next 7 Days': {
+                return {
+                    'Next 7 Days': nextSevenDays,
+                }
+            }
+            case 'Archived': {
+                return {
+                    'Archived': archived,
+                }
+            }
+            default: {
+                return {
+                    'Today': today,
+                    'Tomorrow': tomorrow,
+                    'Next 7 Days': nextSevenDays,
+                    'Untimed': untimed,
+                };
+            }
+        }
     }
 
     function createCategoryDoms() {
@@ -144,9 +221,12 @@ let taskController = (function () {
         Object.keys(categories).forEach((category) => {
             domElements += `
                 <li class="side-panel--category">
-                    <button class="side-panel--category__title">
+                    <button class="side-panel--category__title" data-filter="${categories[category].name}" data-filtertype="category">
                         <span style="background-color: ${categories[category].color}">&nbsp;</span>
                         ${categories[category].name}
+                    </button>
+                    <button class="side-panel--category__del" data-category="${categories[category].name}">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </li>
             `;
@@ -155,59 +235,61 @@ let taskController = (function () {
         return domElements;
     }
 
-    function listTasks() {
-        console.log(tasks);
-    }
-
     function fillInfoPanelWithData(index, panel) {
-        panel.querySelector('.modal--task__title').innerText = tasks[index].title;
-        panel.querySelector('.modal--task__description').innerText = tasks[index].note;
-        panel.querySelector('.modal--task__bar--duetime').innerText = tasks[index].dueTime !== '' ? tasks[index].dueTime : 'No due time';
-        panel.querySelector('.modal--task__bar--category').innerText = tasks[index].category ? tasks[index].category.name : 'Uncategorized';
+        const task = getTaskById(index);
+        panel.querySelector('.modal--task__title').innerText = task.title;
+        panel.querySelector('.modal--task__description').innerText = task.note;
+        panel.querySelector('.modal--task__bar--duetime').innerText = task.dueTime !== '' ? task.dueTime : 'No due time';
+        panel.querySelector('.modal--task__bar--category').innerText = task.category ? task.category.name : 'Uncategorized';
     }
 
     function fillEditPanelWithData(index, panel) {
-        panel.querySelector('#taskTitle').value = tasks[index]['title'];
+        const task = getTaskById(index);
+
+        panel.querySelector('#taskTitle').value = task['title'];
         
-        if (tasks[index]['note']) {
-            panel.querySelector('#taskNote').value = tasks[index]['note'];
+        if (task['note']) {
+            panel.querySelector('#taskNote').value = task['note'];
         }
 
-        if (tasks[index]['dueTime']) {
-            panel.querySelector('#taskTime').value = tasks[index]['dueTime'];
+        if (task['dueTime']) {
+            panel.querySelector('#taskTime').value = task['dueTime'];
         }
 
-        if (tasks[index]['category']) {
-            panel.querySelector('#taskCategory').value = tasks[index]['category']['name'];
+        if (task['category']) {
+            panel.querySelector('#taskCategory').value = task['category']['name'];
         }
     }
 
     function changeTaskDoneness(index) {
-        tasks[index].isDone = !tasks[index].isDone;
+        const task = getTaskById(index);
+        task.isDone = !task.isDone;
+        saveToLocalStorage();
     }
 
     function getUncompletedTasksLength() {
-        return tasks.filter((task) => !task.isDone).length;
+        return tasks.filter((task) => !task.isDone && !task.isArchived).length;
     }
 
-    function getDueTasks() {
+    function getDueTasksCounters() { 
         let counterObj = {
             'today': 0,
             'tomorrow': 0,
             'nextSevenDays': 0,
-            'untimed': 0
+            'untimed': 0,
+            'uncompleted': getUncompletedTasksLength()
         };
 
         const dateToday = new Date;
         const msPerDay = 24 * 60 * 60 * 1000;
 
-        tasks.forEach((task) => {
+        tasks.filter((task) => !task.isArchived && !task.isDone).forEach((task) => {
             if (task.dueTime) {
-                const t = new Date(task.duetime)
+                const t = new Date(task.dueTime)
 
-                if ((t - dateToday) / msPerDay === 0) {
+                if ((t - dateToday) / msPerDay <= 0.5) {
                     counterObj.today += 1;
-                } else if ((t - dateToday) / msPerDay === 1) {
+                } else if ((t - dateToday) / msPerDay <= 1) {
                     counterObj.tomorrow += 1;
                 } else {
                     counterObj.nextSevenDays += 1;
@@ -220,8 +302,14 @@ let taskController = (function () {
         return counterObj;
     }
 
-    function deleteTaskById(id) {
-        tasks.splice(id, 1);
+    function deleteTaskById(index) {
+        for (let i = 0; i < tasks.length; ++i) {
+            if (index == tasks[i]['id']) {
+                tasks.splice(i, 1);
+                break;
+            }
+        }
+        saveToLocalStorage();
     }
 
     function fillDropdownWithCategories(dropdown) {
@@ -238,6 +326,64 @@ let taskController = (function () {
         }
     }
 
+    function deleteOverDueTasks() {
+        let n = tasks.length - 1;
+        let i = 0;
+
+        const dateNow = new Date();
+        const msPerDay = 24 * 60 * 60 * 1000;
+
+        while (i <= n) {
+            const t = new Date(tasks[i].dueTime);
+
+            if ((t - dateNow) / msPerDay < -1) {
+                tasks[i] = tasks[n];
+                --n;
+            } else {
+                ++i;
+            }
+        }
+
+        tasks.splice(n + 1, (tasks.length - n));
+        saveToLocalStorage();
+    }
+
+    function saveToLocalStorage() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('categories', JSON.stringify(categories));
+        localStorage.setItem('idCounter', JSON.stringify(idCounter));
+    }
+
+    function loadFromLocalStorage() {
+        if (localStorage.getItem('tasks')) {
+            tasks = JSON.parse(localStorage.getItem('tasks'));
+        }
+
+        if (localStorage.getItem('categories')) {
+            categories = JSON.parse(localStorage.getItem('categories'));
+        }
+
+        if (localStorage.getItem('idCounter')) {
+            idCounter = parseInt(JSON.parse(localStorage.getItem('idCounter')));
+        }
+    }
+
+    function archiveTaskById(index) {
+        const task = getTaskById(index);
+        task.isArchived = !task.isArchived;
+        saveToLocalStorage();
+    }
+
+    function deleteCategoryByName(name) {
+        delete categories[name];
+
+        getTasksByCategory(name).forEach((task) => {
+            task.category = undefined;
+        });
+
+        saveToLocalStorage();
+    }
+
     return {
         createTask,
         editTask,
@@ -245,12 +391,14 @@ let taskController = (function () {
         fillInfoPanelWithData,
         fillEditPanelWithData,
         changeTaskDoneness,
-        getUncompletedTasksLength,
-        getDueTasks,
+        getDueTasksCounters,
         deleteTaskById,
         createCategory,
         createCategoryDoms,
-        fillDropdownWithCategories
+        fillDropdownWithCategories,
+        loadFromLocalStorage,
+        archiveTaskById,
+        deleteCategoryByName
     };
 }());
 

@@ -2,11 +2,6 @@ const {
     taskController
 } = require('./taskController');
 
-/*
-    TODO: 1. sanitize input fields;
-          2. markdown input;
- */
-
 let displayController = (function () {
     const headerAddTaskBtn = document.querySelector("#headerAddTaskBtn");
     const mainPanelAddTaskBtn = document.querySelector('#mainPanelAddTaskBtn');
@@ -38,12 +33,16 @@ let displayController = (function () {
     const newCategoryLabel = document.querySelector('#newCategoryLabel');
     const categoryWrapper = document.querySelector('#categoryWrapper');
 
-    const counterDots = {
-        'headerUncompleted': document.querySelector('.header--btns__uncompleted--dot'),
-        'sidePanelAllTasks': document.querySelector('#allTasksCounter'),
-        'sidePanelTodayTasks': document.querySelector('#todayTasksCounter'),
-        'sidePanelNextSevenDays': document.querySelector('#nextDaysTasksCounter')
-    }
+    const menuFilters = [document.querySelector('#todayTasksFilter'), document.querySelector('#allTasksFilter'), document.querySelector('#next7DaysTasksFilter'), document.querySelector('#archivedTasksFilter'), document.querySelector('.header--btns__uncompleted'), document.querySelector('.header--btns__archive')];
+    let categoryFilters = [];
+    const counterDots = [document.querySelector('.header--btns__uncompleted--dot'), document.querySelector('#allTasksCounter'), document.querySelector('#todayTasksCounter'), document.querySelector('#nextDaysTasksCounter')];
+
+    let currentFilter = 'All&&';
+
+    const popup = document.querySelector('.popup');
+    let popupTimeoutId = null;
+
+    const searchInput = document.querySelector('#searchInput');
 
     function showAddTimeBar(e) {
         hideTaskAddTimeBtn.addEventListener('click', hideAddTimeBar);
@@ -54,7 +53,6 @@ let displayController = (function () {
     function hideAddTimeBar(e) {
         taskAddTimeBtn.classList.remove('hidden');
         taskAddTimeBar.classList.add('hidden');
-        taskForm.querySelector('#taskCategory').value = '';
         taskForm.querySelector('#taskTime').value = '';
     }
 
@@ -68,6 +66,7 @@ let displayController = (function () {
     function hideAddCategoryBar(e) {
         taskAddCategoryBtn.classList.remove('hidden');
         taskAddCategoryBar.classList.add('hidden');
+        taskForm.querySelector('#taskCategory').value = '';
     }
 
     function showTaskPanel(e, title, btnText, handleFn, index) {
@@ -115,12 +114,13 @@ let displayController = (function () {
 
     function getFormData(form) {
         const formElements = form.elements;
+
         const formData = {
             'title': formElements[0].value,
             'note': formElements[1].value,
             'dueTime': formElements[3].value,
             'category': {
-                'name': formElements[5].value
+                'name': formElements[6].value
             }
         };
 
@@ -128,18 +128,18 @@ let displayController = (function () {
     }
 
     function populateTaskDom() {
-        const taskDOMs = taskController.createTaskDoms();
+        let taskDOMs = taskController.createTaskDoms(currentFilter);
         taskWrapper.innerHTML = '';
 
-        Object.keys(taskDOMs).forEach((time) => {
-            if (taskDOMs[time] !== '') {
+        Object.keys(taskDOMs).forEach((tag) => {
+            if (taskDOMs[tag] !== '') {
                 taskWrapper.innerHTML += `
                     <section class="main-panel--days">
-                        <h2>${time}</h2>
+                        <h2>${tag}</h2>
                     </section>
                     <section class="main-panel--tasks">
                         <ul class="main-panel--tasks__list">
-                            ${taskDOMs[time]}
+                            ${taskDOMs[tag]}
                         </ul>
                     </section>
                 `;
@@ -149,17 +149,17 @@ let displayController = (function () {
         addListenersToElements(document.querySelectorAll('.main-panel--tasks__item--info'), 'click', showTaskInfo);
         addListenersToElements(document.querySelectorAll('.main-panel--tasks__item--title > input[type="checkbox"]'), 'change', changeTaskDoneness);
         addListenersToElements(document.querySelectorAll('.main-panel--tasks__item--dropdown__edit'), 'click', editTask);
+        addListenersToElements(document.querySelectorAll('.main-panel--tasks__item--dropdown__archive'), 'click', archiveTask);
         addListenersToElements(document.querySelectorAll('.main-panel--tasks__item--dropdown__delete'), 'click', deleteTask);
         setCounterDots();
     }
 
     function setCounterDots() {
-        counterDots['headerUncompleted'].innerText = taskController.getUncompletedTasksLength();
+        const dueTasksCounters = taskController.getDueTasksCounters();
 
-        const dueTasks = taskController.getDueTasks();
-        counterDots['sidePanelAllTasks'].innerText = (dueTasks.today + dueTasks.tomorrow + dueTasks.nextSevenDays + dueTasks.untimed);
-        counterDots['sidePanelTodayTasks'].innerText = dueTasks.today;
-        counterDots['sidePanelNextSevenDays'].innerText = dueTasks.nextSevenDays;
+        counterDots.forEach((counter) => {
+            counter.innerText = dueTasksCounters[counter.dataset['counter']];
+        });
     }
 
     function addListenersToElements(elements, event, fnHandler) {
@@ -200,6 +200,7 @@ let displayController = (function () {
     function handleAddTask(e) {
         e.preventDefault();
         const data = getFormData(this);
+
 
         if (isFormValid(this, data)) {
             taskController.createTask(data);
@@ -246,6 +247,11 @@ let displayController = (function () {
         document.activeElement.blur();
     }
 
+    function archiveTask(e) {
+        taskController.archiveTaskById(this.dataset['postindex']);
+        populateTaskDom(e);
+    }
+
     function isFormValid(form, data) {
         if (!data['title']) {
             form.querySelector('.modal--form__title--error').classList.remove('hidden');
@@ -278,10 +284,73 @@ let displayController = (function () {
 
     function populateCategoryDom() {
         categoryWrapper.innerHTML = taskController.createCategoryDoms();
+        addListenersToElements(menuFilters, 'click', filterDOM);
+        addListenersToElements(categoryWrapper.querySelectorAll('.side-panel--category__title'), 'click', filterDOM);
+        addListenersToElements(categoryWrapper.querySelectorAll('.side-panel--category__del'), 'click', deleteCategory);
     }
 
-    populateTaskDom();
-    populateCategoryDom();
+    function deleteCategory() {
+        taskController.deleteCategoryByName(this.dataset['category']);
+        populateCategoryDom();
+        populateTaskDom();
+    }
+
+    function initialLoad() {
+        taskController.loadFromLocalStorage();
+        populateCategoryDom();
+        populateTaskDom();
+    }
+
+    function filterDOM() {
+        let tmpFilter = currentFilter.split('&');
+
+        if (this.dataset['filtertype'] === 'menu') {
+            document.querySelector('.side-panel--menu').querySelector('.active').classList.remove('active');
+            this.classList.add('active');
+
+            if (this.dataset['filter'] !== currentFilter.split('&')[0]) {
+                tmpFilter[0] = this.dataset['filter'];
+            } else {
+                tmpFilter[0] = 'All';
+            }
+        } else if (this.dataset['filtertype'] === 'category') {
+            if (this.dataset['filter'] !== currentFilter.split('&')[1]) {
+                tmpFilter[1] = this.dataset['filter'];
+            } else {
+                tmpFilter[1] = '';
+            }
+        }
+
+        currentFilter = tmpFilter.join('&');
+
+        if (tmpFilter[1] !== '') {
+            showPopUp('Current filters: ' + tmpFilter[0] + ', ' + tmpFilter[1]);
+        } else {
+            showPopUp('Current filter: ' + tmpFilter[0]);
+        }
+
+        populateTaskDom();
+    }
+
+    function showPopUp(msg) {
+        clearTimeout(popupTimeoutId);
+        popup.querySelector('#popupMsg').innerText = msg;
+        popup.classList.add('show');
+        popupTimeoutId = setTimeout(() => {
+            hidePopup();
+        }, 3000);
+    }
+
+    function hidePopup() {
+        popup.classList.remove('show');
+    }
+
+    function searchTask(e) {
+        let tmpFilter = currentFilter.split('&');
+        tmpFilter[2] = this.value;
+        currentFilter = tmpFilter.join('&');
+        populateTaskDom();
+    }
 
     headerAddTaskBtn.addEventListener('click', addTask);
     mainPanelAddTaskBtn.addEventListener('click', addTask);
@@ -293,7 +362,11 @@ let displayController = (function () {
     overlay.addEventListener('click', hidePanels);
     document.addEventListener('keydown', hidePanels);
 
-    return {};
+    searchInput.addEventListener('input', searchTask);
+
+    return {
+        initialLoad
+    };
 }());
 
 module.exports = {
