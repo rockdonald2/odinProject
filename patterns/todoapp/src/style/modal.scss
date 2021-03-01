@@ -46,7 +46,7 @@
                 border: none;
                 border-bottom: 2px solid $color-main;
                 border-radius: 5px;
-                padding: $size-md $size-sm $size-sm $size-sm;
+                padding: $size-md * 1.25 $size-sm $size-sm $size-sm;
                 width: 100%;
                 font-family: inherit;
 
@@ -191,7 +191,7 @@
                         border-top-right-radius: 5rem;
                         border: 1px solid $color-grey;
                         border-left: none;
-                        padding: $size-sm / 3.5 $size-sm;
+                        padding: $size-sm / 3.25 $size-sm;
 
                         svg {
                             margin-right: $size-sm / 4;

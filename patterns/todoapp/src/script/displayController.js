@@ -1,6 +1,5 @@
-const {
-    taskController
-} = require('./taskController');
+const { taskController } = require('./taskController');
+const DOMPURIFY = require('dompurify');
 
 let displayController = (function () {
     const headerAddTaskBtn = document.querySelector("#headerAddTaskBtn");
@@ -34,7 +33,6 @@ let displayController = (function () {
     const categoryWrapper = document.querySelector('#categoryWrapper');
 
     const menuFilters = [document.querySelector('#todayTasksFilter'), document.querySelector('#allTasksFilter'), document.querySelector('#next7DaysTasksFilter'), document.querySelector('#archivedTasksFilter'), document.querySelector('.header--btns__uncompleted'), document.querySelector('.header--btns__archive')];
-    let categoryFilters = [];
     const counterDots = [document.querySelector('.header--btns__uncompleted--dot'), document.querySelector('#allTasksCounter'), document.querySelector('#todayTasksCounter'), document.querySelector('#nextDaysTasksCounter')];
 
     let currentFilter = 'All&&';
@@ -58,7 +56,6 @@ let displayController = (function () {
 
     function showAddCategoryBar(e) {
         hideTaskAddCategoryBtn.addEventListener('click', hideAddCategoryBar);
-        taskController.fillDropdownWithCategories(taskForm.querySelector('#taskCategory'));
         taskAddCategoryBtn.classList.add('hidden');
         taskAddCategoryBar.classList.remove('hidden');
     }
@@ -115,16 +112,14 @@ let displayController = (function () {
     function getFormData(form) {
         const formElements = form.elements;
 
-        const formData = {
-            'title': formElements[0].value,
-            'note': formElements[1].value,
+        return {
+            'title': DOMPURIFY.sanitize(formElements[0].value),
+            'note': DOMPURIFY.sanitize(formElements[1].value, {USE_PROFILES: {html: true}}),
             'dueTime': formElements[3].value,
             'category': {
                 'name': formElements[6].value
             }
         };
-
-        return formData;
     }
 
     function populateTaskDom() {
@@ -182,11 +177,17 @@ let displayController = (function () {
     }
 
     function changeTaskDoneness(e) {
-        taskController.changeTaskDoneness(this.dataset['postindex']);
+        if (taskController.changeTaskDoneness(this.dataset['postindex'])) {
+            showPopUp(`${taskController.getTaskTitleById(this.dataset['postindex'])} is marked done`);
+        } else {
+            showPopUp(`${taskController.getTaskTitleById(this.dataset['postindex'])} is marked undone`);
+        }
+
         setCounterDots();
     }
 
     function deleteTask(e) {
+        showPopUp(`Deleting ${taskController.getTaskTitleById(this.dataset['postindex'])}`);
         taskController.deleteTaskById(this.dataset['postindex']);
         populateTaskDom(e);
     }
@@ -201,8 +202,9 @@ let displayController = (function () {
         e.preventDefault();
         const data = getFormData(this);
 
-
         if (isFormValid(this, data)) {
+            showPopUp(`Creating new task ${data['title']}`);
+
             taskController.createTask(data);
             hidePanels({
                 'type': 'click'
@@ -235,6 +237,8 @@ let displayController = (function () {
         e.preventDefault();
         const data = getFormData(this);
 
+        showPopUp(`Editing ${taskController.getTaskTitleById(this.dataset['postindex'])}`);
+
         if (isFormValid(this, data)) {
             taskController.editTask(this.dataset['postindex'], data);
 
@@ -248,6 +252,7 @@ let displayController = (function () {
     }
 
     function archiveTask(e) {
+        showPopUp(`Archiving ${taskController.getTaskTitleById(this.dataset['postindex'])}`);
         taskController.archiveTaskById(this.dataset['postindex']);
         populateTaskDom(e);
     }
@@ -264,8 +269,10 @@ let displayController = (function () {
     function addCategory(e) {
         e.preventDefault();
 
+        showPopUp(`Creating new category ${DOMPURIFY.sanitize(newCategoryLabel.value)}`);
+
         if (newCategoryLabel.value) {
-            taskController.createCategory(newCategoryLabel.value);
+            taskController.createCategory(DOMPURIFY.sanitize(newCategoryLabel.value));
         }
 
         hideAddCategoryPanel();
@@ -284,19 +291,23 @@ let displayController = (function () {
 
     function populateCategoryDom() {
         categoryWrapper.innerHTML = taskController.createCategoryDoms();
+        taskController.fillDropdownWithCategories(taskForm.querySelector('#taskCategory'));
         addListenersToElements(menuFilters, 'click', filterDOM);
         addListenersToElements(categoryWrapper.querySelectorAll('.side-panel--category__title'), 'click', filterDOM);
         addListenersToElements(categoryWrapper.querySelectorAll('.side-panel--category__del'), 'click', deleteCategory);
     }
 
     function deleteCategory() {
+        showPopUp(`Deleting category ${this.dataset['category']}, setting all associated task to uncategorized`);
         taskController.deleteCategoryByName(this.dataset['category']);
         populateCategoryDom();
         populateTaskDom();
     }
 
     function initialLoad() {
-        taskController.loadFromLocalStorage();
+        if (taskController.loadFromLocalStorage()) {
+            showPopUp(`Data loaded from local storage`);
+        }
         populateCategoryDom();
         populateTaskDom();
     }
@@ -319,6 +330,20 @@ let displayController = (function () {
             } else {
                 tmpFilter[1] = '';
             }
+        } else if (this.dataset['filtertype'] === 'header') {
+            document.querySelector('.side-panel--menu').querySelector('.active').classList.remove('active');
+
+            if (this.dataset['filter'] === 'All') {
+                document.querySelector('.side-panel--menu').querySelector('#allTasksFilter').classList.add('active');
+            } else if (this.dataset['filter'] === 'Archived') {
+                document.querySelector('.side-panel--menu').querySelector('#archivedTasksFilter').classList.add('active');
+            }
+
+            if (this.dataset['filter'] !== currentFilter.split('&')[0]) {
+                tmpFilter[0] = this.dataset['filter'];
+            } else {
+                tmpFilter[0] = 'All';
+            }
         }
 
         currentFilter = tmpFilter.join('&');
@@ -333,16 +358,41 @@ let displayController = (function () {
     }
 
     function showPopUp(msg) {
-        clearTimeout(popupTimeoutId);
-        popup.querySelector('#popupMsg').innerText = msg;
-        popup.classList.add('show');
-        popupTimeoutId = setTimeout(() => {
-            hidePopup();
+        const newMsg = document.createElement('div');
+
+        newMsg.classList.add('popup--instance');
+        newMsg.innerHTML = `
+            <div class="popup--instance__title">
+                <svg class="w-6 h-6"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round"
+                         stroke-linejoin="round"
+                          stroke-width="2"
+                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3>Info</h3>
+            </div>
+            <p class="popup--instance__msg">${msg}</p>
+        `;
+
+        popup.appendChild(newMsg);
+        setTimeout(() => {
+            newMsg.classList.add('show')
+        }, 100);
+
+        setTimeout(() => {
+            hidePopup(newMsg);
         }, 3000);
     }
 
-    function hidePopup() {
-        popup.classList.remove('show');
+    function hidePopup(popupTab) {
+        popupTab.classList.remove('show');
+        setTimeout(() => {
+            popup.removeChild(popupTab);
+        }, 250);
     }
 
     function searchTask(e) {

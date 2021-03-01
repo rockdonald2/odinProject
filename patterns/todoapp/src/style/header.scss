@@ -1,7 +1,7 @@
 .header {
     background-color: $color-main;
-    padding: $size-sm * 0.75 $size-lg * 2 $size-sm $size-lg * 1.25;
-    display: flex;
+    padding: $size-sm * 0.65 $size-lg $size-sm $size-lg;
+    @include flexCenterize;
 
     &--logo {
         padding: $size-sm / 2 $size-sm;
@@ -24,14 +24,11 @@
     &--form {
         @include flexCenterize;
         flex: 3;
+        max-width: 100rem;
 
         fieldset {
             border: none;
             width: 100%;
-        }
-
-        &__holder {
-
         }
 
         &__search {
@@ -91,7 +88,6 @@
 
     &--btns {
         @include flexCenterize;
-        flex: 1;
 
         button {
             width: $size-md * 1.15;

@@ -1,43 +1,49 @@
 .popup {
-    width: 30rem;
     position: absolute;
-    background-color: $color-white;
-    @include layeredSmoothShadow;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    top: -25%;
+    top: 25px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
-    padding: $size-sm;
     transition: all .5s;
 
-    &.show {
-        top: 0;
-    }
+    &--instance {
+        width: 35rem;
+        border-radius: 1rem;
+        padding: $size-sm;
+        background-color: $color-white;
+        @include layeredSmoothShadow;
+        @include transition(all);
+        transform: translateY(-100%);
+        opacity: 0;
 
-    &--title, 
-    &--msg {
-        margin-bottom: $size-sm;
-    }
-
-    &--title {
-        @include flexCenterize;
-        color: $color-main;
-
-        h3 {
-            font-size: 2.2rem;
+        &.show {
+            transform: translateY(0);
+            opacity: 1;
         }
 
-        svg {
-            width: $size-md * 1.25;
-            height: $size-md * 1.25;
-            margin-right: $size-sm;
+        &:not(:last-of-type) {
+            margin-bottom: $size-sm;
         }
-    }
 
-    &--msg {
-        font-size: 1.4rem;
-        text-align: center;
+        &__title {
+            @include flexCenterize;
+            color: $color-main;
+            margin-bottom: $size-sm;
+
+            h3 {
+                font-size: 2rem;
+            }
+
+            svg {
+                width: $size-md * 1.25;
+                height: $size-md * 1.25;
+                margin-right: $size-sm;
+            }
+        }
+
+        &__msg {
+            font-size: 1.5rem;
+            text-align: center;
+        }
     }
 }

@@ -1,3 +1,5 @@
+const markdown = require('markdown');
+
 let taskController = (function () {
     const colors = ['#ee5253', '#feca57', '#00d2d3', '#222f3e', '#341f97', '#2e86de', '#ff9f43'];
     const COLOR_MAIN = "#70a1ff";
@@ -56,11 +58,12 @@ let taskController = (function () {
     }
 
     function editTask(index, data) {
+        const task = getTaskById(index);
         Object.keys(data).forEach((key) => {
             if (key !== 'category') {
-                tasks[index][key] = data[key];
+                task[key] = data[key];
             } else {
-                tasks[index][key] = categories[data[key]['name']];
+                task[key] = categories[data[key]['name']];
             }
         });
 
@@ -125,7 +128,7 @@ let taskController = (function () {
                                 </button>
                                 <ul class="main-panel--tasks__item--dropdown__list">
                                     <li class="main-panel--tasks__item--dropdown__item">
-                                        <button button button type="button"
+                                        <button type="button"
                                         class="main-panel--tasks__item--dropdown__edit"
                                         data-postindex = "${task.id}">
                                             <svg class="w-6 h-6"
@@ -237,8 +240,8 @@ let taskController = (function () {
 
     function fillInfoPanelWithData(index, panel) {
         const task = getTaskById(index);
-        panel.querySelector('.modal--task__title').innerText = task.title;
-        panel.querySelector('.modal--task__description').innerText = task.note;
+        panel.querySelector('.modal--task__title').innerHTML = task.title;
+        panel.querySelector('.modal--task__description').innerHTML = markdown.markdown.toHTML(task.note);
         panel.querySelector('.modal--task__bar--duetime').innerText = task.dueTime !== '' ? task.dueTime : 'No due time';
         panel.querySelector('.modal--task__bar--category').innerText = task.category ? task.category.name : 'Uncategorized';
     }
@@ -265,6 +268,7 @@ let taskController = (function () {
         const task = getTaskById(index);
         task.isDone = !task.isDone;
         saveToLocalStorage();
+        return task.isDone;
     }
 
     function getUncompletedTasksLength() {
@@ -316,6 +320,7 @@ let taskController = (function () {
         dropdown.innerHTML = '';
 
         if (Object.keys(categories).length !== 0) {
+            dropdown.innerHTML = '<option value="" selected disabled>Select a category</option>';
             Object.keys(categories).forEach((category) => {
                 dropdown.innerHTML += `
                     <option value="${categories[category].name}">${categories[category].name}</option>
@@ -366,6 +371,8 @@ let taskController = (function () {
         if (localStorage.getItem('idCounter')) {
             idCounter = parseInt(JSON.parse(localStorage.getItem('idCounter')));
         }
+
+        return !(!tasks && !categories && !idCounter);
     }
 
     function archiveTaskById(index) {
@@ -384,6 +391,10 @@ let taskController = (function () {
         saveToLocalStorage();
     }
 
+    function getTaskTitleById(id) {
+        return getTaskById(id)['title'];
+    }
+
     return {
         createTask,
         editTask,
@@ -398,7 +409,8 @@ let taskController = (function () {
         fillDropdownWithCategories,
         loadFromLocalStorage,
         archiveTaskById,
-        deleteCategoryByName
+        deleteCategoryByName,
+        getTaskTitleById
     };
 }());
 

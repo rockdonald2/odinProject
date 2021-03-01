@@ -1,5 +1,7 @@
 .container {
     width: 100%;
+    max-width: 150rem;
+    margin: 0 auto;
     min-height: calc(100vh - 65px);
     display: grid;
     grid-template-columns: 25% 75%;
@@ -320,13 +322,13 @@
 
                     &:checked {
                         &+label {
-                            background-color: rgba($color-darkgrey, .5);
+                            background-color: rgba($color-grey, .5);
                             text-decoration: none !important;
                         }
 
                         &~label {
                             text-decoration: line-through;
-                            color: $color-darkgrey;
+                            color: $color-grey;
                         }
                     }
                 }
