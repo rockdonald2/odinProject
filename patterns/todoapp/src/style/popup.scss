@@ -1,9 +1,9 @@
 .popup {
-    position: absolute;
+    position: fixed;
     top: 25px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 2;
+    z-index: 4;
     transition: all .5s;
 
     &--instance {

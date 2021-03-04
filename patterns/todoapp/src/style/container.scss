@@ -5,6 +5,12 @@
     min-height: calc(100vh - 65px);
     display: grid;
     grid-template-columns: 25% 75%;
+
+    @include respond(750px) {
+        grid-template-rows: -webkit-min-content auto;
+        grid-template-rows: min-content auto;
+        grid-template-columns: auto;
+    }
 }
 
 .side-panel {
@@ -12,6 +18,17 @@
     border-right: 1px solid $color-grey;
     padding: $size-lg 0 $size-lg $size-lg;
 
+    @include respond(900px) {
+        padding: $size-md 0 $size-md $size-sm;
+    }
+
+    @include respond(750px) {
+        padding: $size-md 0;
+        margin: 0 $size-sm;
+        border-right: none;
+        border-bottom: 1px solid $color-grey;
+    }
+ 
     &--menu {
         list-style-type: none;
         padding-bottom: $size-md;
@@ -22,6 +39,10 @@
             border-top-left-radius: 2.5rem;
             border-bottom-left-radius: 2.5rem;
             @include transition(all);
+
+            @include respond(750px) {
+                border-radius: 2.5rem;
+            }
 
             &:hover,
             &:focus,
@@ -77,7 +98,7 @@
 
             small {
                 font-size: 1.2rem;
-                margin-left: $size-sm;
+                margin-left: auto;
                 color: $color-darkgrey;
             }
 
@@ -146,10 +167,18 @@
                 &.hidden {
                     z-index: -1;
                     opacity: 0;
+                    display: none;
+                }
+
+                label, form {
+                    width: 75%;
+
+                    @include respond(750px) {
+                        width: 90%;
+                    }
                 }
 
                 label {
-                    width: 75%;
                     background-color: $color-main;
                     color: #fff;
                     padding: $size-sm / 2 $size-sm;
@@ -161,7 +190,6 @@
                 }
 
                 form {
-                    width: 75%;
                     border: 1px solid rgba($color-darkgrey, .75);
                     border-top: none;
                     @include flexHorizontalCenterize;
@@ -206,6 +234,10 @@
         border-bottom-left-radius: 2.5rem;
         @include transition(all);
         @include flexHorizontalCenterize;
+
+        @include respond(750px) {
+            border-radius: 2.5rem;
+        }
 
         &:not(:last-of-type) {
             margin-bottom: $size-sm;
@@ -282,6 +314,14 @@
 .main-panel {
     padding: $size-md $size-lg;
 
+    @include respond(900px) {
+        padding: $size-sm $size-md;
+    }
+
+    @include respond(750px) {
+        padding: $size-md $size-sm;
+    }
+
     &--days {
         h2 {
             font-size: 2.4rem;
@@ -308,6 +348,12 @@
             padding: 0 $size-sm;
             position: relative;
 
+            @include respond(500px) {
+                flex-direction: column;
+                align-items: flex-end;
+                padding: $size-sm $size-sm;
+            }
+
             &:hover,
             &:focus {
                 background-color: rgba($color-grey, .15);
@@ -316,6 +362,14 @@
             &--title {
                 @include flexHorizontalCenterize;
                 width: 50%;
+
+                @include respond(600px) {
+                    width: 35%;
+                }
+
+                @include respond(500px) {
+                    width: 100%;
+                }
 
                 input[type="checkbox"] {
                     display: none;
@@ -336,6 +390,12 @@
                 &+div {
                     display: flex;
                     align-items: center;
+
+                    @include respond(500px) {
+                        width: 100%;
+                        justify-content: flex-end;
+                        margin-top: $size-sm;
+                    }
                 }
             }
 
@@ -363,12 +423,17 @@
             }
 
             &--text {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
                 flex: 1;
                 padding: $size-sm;
             }
 
-            &--duetime {
+            &--priority {
+                margin-right: $size-sm;
+            }
+
+            &--duetime,
+            &--priority {
                 font-weight: 300;
                 font-size: 1.2rem;
                 -webkit-user-select: none;

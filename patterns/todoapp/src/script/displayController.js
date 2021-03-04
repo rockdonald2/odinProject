@@ -2,6 +2,12 @@ const { taskController } = require('./taskController');
 const DOMPURIFY = require('dompurify');
 
 let displayController = (function () {
+    const header = document.querySelector('#header');
+    const container = document.querySelector('#container');
+
+    const headerSearchBtn = document.querySelector('#headerSearchBtn');
+    const searchBar = document.querySelector('.header--form');
+    searchBar.style.top = `${header.clientHeight}px`;
     const headerAddTaskBtn = document.querySelector("#headerAddTaskBtn");
     const mainPanelAddTaskBtn = document.querySelector('#mainPanelAddTaskBtn');
     const overlay = document.querySelector('.overlay');
@@ -22,6 +28,10 @@ let displayController = (function () {
     const taskAddCategoryBar = document.querySelector('#taskAddCategoryBtn + div');
     const taskForm = document.querySelector('#taskForm');
     const taskWrapper = document.querySelector('#taskWrapper');
+    const taskMarkdownButtons = document.querySelectorAll('.modal--form__note--btns > button');
+    const taskAddPriorityBtn = document.querySelector('#taskAddPriorityBtn');
+    const hideTaskAddPriorityBtn = document.querySelector('#hideTaskAddPriorityBtn');
+    const taskAddPriorityBar = document.querySelector('#taskAddPriorityBtn + div');
 
     const morePanel = document.querySelector('#morePanel');
 
@@ -42,6 +52,16 @@ let displayController = (function () {
 
     const searchInput = document.querySelector('#searchInput');
 
+    function toggleHeader(e) {
+        if (window.pageYOffset) {
+            container.style.marginTop = `${header.clientHeight}px`;
+            header.classList.add('fixed');
+        } else {
+            header.classList.remove('fixed');
+            container.style.marginTop = 0;
+        }
+    }
+
     function showAddTimeBar(e) {
         hideTaskAddTimeBtn.addEventListener('click', hideAddTimeBar);
         taskAddTimeBtn.classList.add('hidden');
@@ -51,6 +71,7 @@ let displayController = (function () {
     function hideAddTimeBar(e) {
         taskAddTimeBtn.classList.remove('hidden');
         taskAddTimeBar.classList.add('hidden');
+        hideTaskAddTimeBtn.removeEventListener('click', hideAddTimeBar);
         taskForm.querySelector('#taskTime').value = '';
     }
 
@@ -63,7 +84,21 @@ let displayController = (function () {
     function hideAddCategoryBar(e) {
         taskAddCategoryBtn.classList.remove('hidden');
         taskAddCategoryBar.classList.add('hidden');
+        hideTaskAddCategoryBtn.removeEventListener('click', hideAddCategoryBar);
         taskForm.querySelector('#taskCategory').value = '';
+    }
+
+    function showAddPriorityBar(e) {
+        hideTaskAddPriorityBtn.addEventListener('click', hideAddPriorityBar);
+        taskAddPriorityBtn.classList.add('hidden');
+        taskAddPriorityBar.classList.remove('hidden');
+    }
+
+    function hideAddPriorityBar(e) {
+        hideTaskAddPriorityBtn.removeEventListener('click', hideAddPriorityBar);
+        taskAddPriorityBtn.classList.remove('hidden');
+        taskAddPriorityBar.classList.add('hidden');
+        taskForm.querySelector('#taskPriority').value = '';
     }
 
     function showTaskPanel(e, title, btnText, handleFn, index) {
@@ -90,6 +125,7 @@ let displayController = (function () {
         taskPanel.classList.add('hidden');
         hideAddTimeBar();
         hideAddCategoryBar();
+        hideAddPriorityBar();
         resetFormDisplay();
     }
 
@@ -114,11 +150,12 @@ let displayController = (function () {
 
         return {
             'title': DOMPURIFY.sanitize(formElements[0].value),
-            'note': DOMPURIFY.sanitize(formElements[1].value, {USE_PROFILES: {html: true}}),
-            'dueTime': formElements[3].value,
+            'note': DOMPURIFY.sanitize(formElements[8].value, {USE_PROFILES: {html: true}}),
+            'dueTime': formElements[10].value,
             'category': {
-                'name': formElements[6].value
-            }
+                'name': formElements[13].value
+            },
+            'priority': formElements[16].value === '' ? 4 : parseInt(formElements[16].value),
         };
     }
 
@@ -193,8 +230,6 @@ let displayController = (function () {
     }
 
     function addTask(e) {
-        taskAddTimeBtn.addEventListener('click', showAddTimeBar);
-        taskAddCategoryBtn.addEventListener('click', showAddCategoryBar);
         showTaskPanel(e, 'Add a task', 'Create task', handleAddTask, -1);
     }
 
@@ -220,14 +255,14 @@ let displayController = (function () {
 
         if (taskPanel.querySelector('#taskCategory').value) {
             showAddCategoryBar(e);
-        } else {
-            taskAddCategoryBtn.addEventListener('click', showAddCategoryBar);
         }
 
         if (taskPanel.querySelector('#taskTime').value) {
             showAddTimeBar(e);
-        } else {
-            taskAddTimeBtn.addEventListener('click', showAddTimeBar);
+        }
+
+        if (taskPanel.querySelector('#taskPriority').value) {
+            showAddPriorityBar(e);
         }
 
         showTaskPanel(e, 'Edit a task', 'Finalize task', handleEditTask, this.dataset['postindex']);
@@ -402,8 +437,50 @@ let displayController = (function () {
         populateTaskDom();
     }
 
+    function addMarkdownSyntaxToInput(e) {
+        const taskNoteInput = document.querySelector('#taskNote');
+
+        switch (this.dataset.markdownvalue) {
+            case 'h1':
+                taskNoteInput.value += '# ';
+                break;
+            case 'h2':
+                taskNoteInput.value += '## ';
+                break;
+            case 'h3':
+                taskNoteInput.value += '### ';
+                break;
+            case 'ol':
+                taskNoteInput.value += '1. ';
+                break;
+            case 'ul':
+                taskNoteInput.value += '- ';
+                break;
+            case 'b':
+                taskNoteInput.value += '** ** ';
+                break;
+            case 'i': 
+                taskNoteInput.value += '* * ';
+                break;
+            default:
+                throw new Error("Invalid markdown input");
+        }
+
+        document.activeElement.blur();
+    }
+
+    function toggleSearchBar(e) {
+        if (searchBar.style.left !== '50%' || searchBar.style.left === '') {
+            searchBar.style.left = `50%`;
+        } else {
+            searchBar.style.left = `-50%`;
+        }
+    }
+
     headerAddTaskBtn.addEventListener('click', addTask);
     mainPanelAddTaskBtn.addEventListener('click', addTask);
+
+    headerSearchBtn.addEventListener('click', toggleSearchBar);
 
     addCategoryBtn.addEventListener('click', showAddCategoryPanel);
     hideAddCategoryBtn.addEventListener('click', hideAddCategoryPanel);
@@ -413,6 +490,13 @@ let displayController = (function () {
     document.addEventListener('keydown', hidePanels);
 
     searchInput.addEventListener('input', searchTask);
+
+    addListenersToElements(taskMarkdownButtons, 'click', addMarkdownSyntaxToInput);
+    taskAddTimeBtn.addEventListener('click', showAddTimeBar);
+    taskAddCategoryBtn.addEventListener('click', showAddCategoryBar);
+    taskAddPriorityBtn.addEventListener('click', showAddPriorityBar);
+
+    document.addEventListener('scroll', toggleHeader);
 
     return {
         initialLoad

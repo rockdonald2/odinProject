@@ -37,8 +37,20 @@
 						Title is required
 					</small>
 					<div class="modal--form__note">
-						<textarea id="taskNote" placeholder="Markdown is allowed"></textarea>
-						<label for="taskNote">Note</label>
+						<div class="modal--form__note--btns">
+							<button type="button" data-markdownvalue="h1">h1</button>
+							<button type="button" data-markdownvalue="h2">h2</button>
+							<button type="button" data-markdownvalue="h3">h3</button>
+							<button type="button" data-markdownvalue="ol">ol</button>
+							<button type="button" data-markdownvalue="ul">ul</button>
+							<button type="button" data-markdownvalue="b">b</button>
+							<button type="button" data-markdownvalue="i">i</button>
+						</div>
+						<div class="modal--form__note--input">
+							<textarea id="taskNote"
+								placeholder="Markdown is allowed"></textarea>
+							<label for="taskNote">Note</label>
+						</div>
 					</div>
 					<div class="modal--form__time">
 						<div class="modal--form__time--btn">
@@ -93,6 +105,48 @@
 							</div>
 						</div>
 					</div>
+					<div class="modal--form__priority">
+						<div class="modal--form__priority--btn">
+							<button id="taskAddPriorityBtn"
+								type="button">
+								<svg class="w-6 h-6"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg">
+									<path stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z">
+									</path>
+								</svg>
+								Add a priority
+							</button>
+							<div class="hidden">
+								<label for="taskPriority">Priority</label>
+								<select id="taskPriority">
+									<option value="" selected disabled>Select a priority</option>
+									<option value="1">High</option>
+									<option value="2">Medium</option>
+									<option value="3">Low</option>
+									<option value="4">No</option>
+								</select>
+								<button type="button"
+									id="hideTaskAddPriorityBtn">
+									<svg class="w-6 h-6"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg">
+										<path stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M6 18L18 6M6 6l12 12"></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
 					<button type="submit"
 						id="taskSubmitBtn">Create task</button>
 				</form>
@@ -108,7 +162,7 @@
 			</div>
 		</div>
 
-		<header class="header">
+		<header class="header" id="header">
 			<div class="header--logo">
 				<span class="header--logo__holder">
 					<svg class="w-6 h-6"
@@ -148,6 +202,19 @@
 				</fieldset>
 			</div>
 			<div class="header--btns">
+				<button class="header--btns__search"
+					id="headerSearchBtn">
+					<svg class="w-6 h-6"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+					</svg>
+				</button>
 				<button class="header--btns__add"
 					id="headerAddTaskBtn">
 					<svg class="w-6 h-6"
@@ -191,13 +258,10 @@
 							d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
 					</svg>
 				</button>
-				<!--<button class="header&#45;&#45;btns__settings">
-			<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-		</button>-->
 			</div>
 		</header>
 
-		<main class="container">
+		<main class="container" id="container">
 			<nav class="side-panel">
 				<ul class="side-panel--menu">
 					<li class="side-panel--menu__item">
@@ -302,13 +366,13 @@
 							stroke-width="2"
 							d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
 					</svg>
-					<small>Add task</small>
+					<small>Add a task</small>
 				</button>
 			</section>
 		</main>
 		
 		<script src="main.js"
-			type="text/javascript"></script>
+			type="text/javascript" defer="defer"></script>
 	</body>
 
 </html>

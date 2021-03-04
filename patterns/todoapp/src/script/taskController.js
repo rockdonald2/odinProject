@@ -1,8 +1,9 @@
-const markdown = require('markdown');
+const MARKDOWN = require('marked');
 
 let taskController = (function () {
-    const colors = ['#ee5253', '#feca57', '#00d2d3', '#222f3e', '#341f97', '#2e86de', '#ff9f43'];
+    const COLORS = ['#ee5253', '#feca57', '#00d2d3', '#222f3e', '#2e86de', '#ff9f43', '#e1b12c', '#9c88ff', '#0097e6'];
     const COLOR_MAIN = "#70a1ff";
+    const PRIORITY_COLORS = ['#ee5253', '#feca57', '#222f3e'];
     let tasks = [];
     let categories = {};
 
@@ -15,12 +16,13 @@ let taskController = (function () {
 
     let idCounter = 0;
     class Task {
-        constructor(title, note, dueTime, category) {
+        constructor(title, note, dueTime, category, priority) {
             this.id = idCounter++;
             this.title = title;
             this.note = note;
             this.dueTime = dueTime;
             this.category = categories[category.name];
+            this.priority = priority;
             this.isDone = false;
             this.isArchived = false;
         }
@@ -43,16 +45,26 @@ let taskController = (function () {
             title,
             note,
             dueTime,
-            category
+            category,
+            priority
         } = data;
 
-        tasks.push(new Task(title, note, dueTime, category));
+        let i = 0;
+        while (i < tasks.length) {
+            if (tasks[i].priority > priority) {
+                break;
+            }
+
+            ++i;
+        }
+
+        tasks.splice(i, 0, new Task(title, note, dueTime, category, priority));
 
         saveToLocalStorage();
     }
 
     function createCategory(name) {
-        categories[name] = new Category(colors[(Math.floor(Math.random() * (colors.length)))], name);
+        categories[name] = new Category(COLORS[(Math.floor(Math.random() * (COLORS.length)))], name);
 
         saveToLocalStorage();
     }
@@ -70,12 +82,28 @@ let taskController = (function () {
         saveToLocalStorage();
     }
 
+    function getPriorityString(pr) {
+        switch (pr) {
+            case 1:
+                return 'High priority';
+            case 2:
+                return 'Medium priority';
+            case 3:
+                return 'Low priority';
+            case 4:
+                return '';
+            default:
+                throw new Error('Invalid priority value');
+        }
+    }
+
     function createTaskDoms(filter) {
-        let untimed = "";
-        let today = "";
-        let tomorrow = "";
-        let nextSevenDays = "";
-        let archived = "";
+        let untimed = '';
+        let today = '';
+        let tomorrow = '';
+        let nextSevenDays = '';
+        let upcomingDays = '';
+        let archived = '';
 
         const dateToday = new Date;
         const msPerDay = 24 * 60 * 60 * 1000;
@@ -104,16 +132,17 @@ let taskController = (function () {
             }
 
             return false;
-        }).forEach((task, i) => {
+        }).forEach((task) => {
             const taskDom = `
                     <li class="main-panel--tasks__item">
-						<div div class = "main-panel--tasks__item--title" >
+						<div class = "main-panel--tasks__item--title" >
 							<input type="checkbox" data-postindex="${task.id}" id="task${task.id}" ${task.isDone ? 'checked' : ''}>
 							<label class="main-panel--tasks__item--circle" 
 							       style="border-color: ${task.category ? task.category.color : COLOR_MAIN}" for="task${task.id}">&nbsp</label>
 							<label class="main-panel--tasks__item--text" for="task${task.id}">${task.title}</label>
 						</div>
 						<div>
+                            <span class="main-panel--tasks__item--priority" style="color: ${PRIORITY_COLORS[task.priority - 1]};">${getPriorityString(task.priority)}</span>
                             <span class="main-panel--tasks__item--duetime">${task.dueTime === '' ? '' : 'Due ' + task.dueTime}</span>
                             <div class="main-panel--tasks__item--category">
                                 <span style="background-color: ${task.category ? task.category.color : COLOR_MAIN}">&nbsp;</span>
@@ -183,8 +212,10 @@ let taskController = (function () {
                     today += taskDom;
                 } else if ((t - dateToday) / msPerDay <= 1) {
                     tomorrow += taskDom;
-                } else {
+                } else if ((t - dateToday) / msPerDay <= 8) {
                     nextSevenDays += taskDom;
+                } else {
+                    upcomingDays += taskDom;
                 }
             } else {
                 untimed += taskDom;
@@ -211,7 +242,8 @@ let taskController = (function () {
                 return {
                     'Today': today,
                     'Tomorrow': tomorrow,
-                    'Next 7 Days': nextSevenDays,
+                    'Next 7 days': nextSevenDays,
+                    'Upcoming days': upcomingDays,
                     'Untimed': untimed,
                 };
             }
@@ -241,7 +273,7 @@ let taskController = (function () {
     function fillInfoPanelWithData(index, panel) {
         const task = getTaskById(index);
         panel.querySelector('.modal--task__title').innerHTML = task.title;
-        panel.querySelector('.modal--task__description').innerHTML = markdown.markdown.toHTML(task.note);
+        panel.querySelector('.modal--task__description').innerHTML = MARKDOWN(task.note);
         panel.querySelector('.modal--task__bar--duetime').innerText = task.dueTime !== '' ? task.dueTime : 'No due time';
         panel.querySelector('.modal--task__bar--category').innerText = task.category ? task.category.name : 'Uncategorized';
     }
@@ -262,6 +294,8 @@ let taskController = (function () {
         if (task['category']) {
             panel.querySelector('#taskCategory').value = task['category']['name'];
         }
+
+        panel.querySelector('#taskPriority').value = task['priority'];
     }
 
     function changeTaskDoneness(index) {
@@ -341,7 +375,7 @@ let taskController = (function () {
         while (i <= n) {
             const t = new Date(tasks[i].dueTime);
 
-            if ((t - dateNow) / msPerDay < -1) {
+            if (((t - dateNow) / msPerDay < -1) && !tasks[i].isArchived) {
                 tasks[i] = tasks[n];
                 --n;
             } else {

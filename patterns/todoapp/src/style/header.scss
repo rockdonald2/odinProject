@@ -3,6 +3,23 @@
     padding: $size-sm * 0.65 $size-lg $size-sm $size-lg;
     @include flexCenterize;
 
+    @include respond(750px) {
+        padding: $size-sm $size-md $size-sm $size-md;
+    }
+
+    @include respond(600px) {
+        justify-content: space-between;
+    }
+
+    &.fixed {
+        @include transition(all);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 3;
+    }
+
     &--logo {
         padding: $size-sm / 2 $size-sm;
         background-color: $color-white;
@@ -26,6 +43,14 @@
         flex: 3;
         max-width: 100rem;
 
+        @include respond(600px) {
+            position: fixed;
+            max-width: 100vw;
+            left: -50%;
+            transform: translateX(-50%);
+            @include transition(all);
+        }
+
         fieldset {
             border: none;
             width: 100%;
@@ -37,15 +62,35 @@
             margin: 0 auto;
             position: relative;
 
+            @include respond(600px) {
+                width: 100vw;
+            }
+
             input[type="text"] {
                 width: 100%;
-                padding: $size-sm * 0.8  $size-sm $size-sm * 0.8 $size-lg;
+                padding: $size-sm * 0.8 $size-sm $size-sm * 0.8 $size-lg;
                 border-radius: 10rem;
                 border: none;
                 background-color: transparent;
                 color: $color-white;
                 font-size: 1.4rem;
                 @include transition(all);
+
+                &::-webkit-input-placeholder {
+                    color: $color-white;
+                }
+
+                &::-moz-placeholder {
+                    color: $color-white;
+                }
+
+                &:-ms-input-placeholder {
+                    color: $color-white;
+                }
+
+                &::-ms-input-placeholder {
+                    color: $color-white;
+                }
 
                 &::placeholder {
                     color: $color-white;
@@ -60,12 +105,57 @@
                     color: $color-main;
                     @include layeredSmoothShadow;
 
+                    &::-webkit-input-placeholder {
+                        color: $color-main;
+                    }
+
+                    &::-moz-placeholder {
+                        color: $color-main;
+                    }
+
+                    &:-ms-input-placeholder {
+                        color: $color-main;
+                    }
+
+                    &::-ms-input-placeholder {
+                        color: $color-main;
+                    }
+
                     &::placeholder {
                         color: $color-main;
                     }
 
                     & + label > svg {
                         stroke: $color-main;
+                    }
+                }
+
+                @include respond(600px) {
+                    border-radius: 0;
+                    padding: $size-md * 0.8 $size-md $size-md * 0.8 $size-lg;
+                    background-color: $color-white;
+                    color: $color-main;
+                    @include layeredSmoothShadow;
+                    @include transition(all);
+
+                    &::-webkit-input-placeholder {
+                        color: $color-main;
+                    }
+
+                    &::-moz-placeholder {
+                        color: $color-main;
+                    }
+
+                    &:-ms-input-placeholder {
+                        color: $color-main;
+                    }
+
+                    &::-ms-input-placeholder {
+                        color: $color-main;
+                    }
+
+                    &::placeholder {
+                        color: $color-main;
                     }
                 }
             }
@@ -81,6 +171,10 @@
                     width: $size-md * 0.8;
                     height: $size-md * 0.8;
                     stroke: $color-white;
+
+                    @include respond(600px) {
+                        stroke: $color-main;
+                    }
                 }
             }
         }
@@ -124,11 +218,19 @@
             }
         }
 
-        &__uncompleted, &__archive, &__settings {
+        &__uncompleted, &__archive, &__search {
             background-color: transparent;
 
             svg {
                 stroke: $color-white;
+            }
+        }
+
+        &__search {
+            display: none !important;
+
+            @include respond(600px) {
+                display: flex !important;
             }
         }
 

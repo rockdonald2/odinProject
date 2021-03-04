@@ -11,6 +11,14 @@
     @include layeredSmoothShadow;
     @include transition(all);
 
+    @include respond(475px) {
+        width: 40rem;
+    }
+
+    @include respond(400px) {
+        width: 35rem;
+    }
+
     &.active {
         z-index: 75;
         opacity: 1;
@@ -20,6 +28,10 @@
     &--field, &--task {
         margin: $size-md $size-lg;
         padding: $size-sm;
+
+        @include respond(500px) {
+            margin: $size-sm;
+        }
 
         &.hidden {
             display: none;
@@ -56,7 +68,7 @@
             }
         }
 
-        &__title, &__note, &__time, &__category {
+        &__title, &__note, &__time, &__category, &__priority {
             margin-bottom: $size-md;
             position: relative;
         }
@@ -83,6 +95,7 @@
             &--error {
                 @include flexCenterize;
                 margin-left: $size-sm;
+                padding-bottom: $size-md;
                 color: #ff4757;
                 opacity: 1;
                 @include transition(opacity);
@@ -99,11 +112,49 @@
                     z-index: -1;
                     opacity: 0;
                     height: 0;
+                    display: none;
                 }
             }
         }
 
         &__note {
+            &--input {
+                position: relative;
+            }
+
+            &--btns {
+                @include flexCenterize;
+                margin-bottom: $size-sm;
+                flex-wrap: wrap;
+
+                button {
+                    border: none;
+                    background-color: $color-main;
+                    color: $color-white;
+                    padding: $size-sm / 2 $size-sm;
+                    font-size: 1.4rem;
+                    border-radius: 5rem;
+                    cursor: pointer;
+                    @include transition(all);
+                    z-index: 2;
+
+                    &:not(:last-of-type) {
+                        margin-right: $size-sm;
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+
+                    &:hover, 
+                    &:focus {
+                        background-color: $color-white;
+                        color: $color-main;
+                        @include layeredSmoothShadow;
+                    }
+                }
+            }
+
             textarea {
                 resize: none;
                 width: 100%;
@@ -126,7 +177,7 @@
             }
         }
 
-        &__time, &__category {
+        &__time, &__category, &__priority {
             button {
                 border: none;
                 background: none;
@@ -134,6 +185,7 @@
                 padding: 0 $size-sm;
                 cursor: pointer;
                 @include transition(all);
+                font-size: 1.3rem;
 
                 &.hidden {
                     display: none;
@@ -146,7 +198,12 @@
                     stroke: $color-main;
                 }
 
-                &:hover, &:focus {
+                &:focus {
+                    outline: none;
+                }
+
+                &:hover, 
+                &:focus {
                     color: $color-main;
                 }
             }
@@ -159,14 +216,14 @@
                     display: none;
                 }
 
-                label, input[type="date"] {
+                label, input[type="date"], select, button {
                     height: 3.5rem;
                 }
 
                 label {
                     width: 30%;
                     background-color: $color-main;
-                    color: #fff;
+                    color: $color-white;
                     padding: $size-sm / 2 $size-sm;
                     font-size: 1.4rem;
                     border-bottom-left-radius: 5rem;
@@ -205,12 +262,7 @@
 
                 select {
                     width: 70%;
-                    height: 3.5rem;
                     padding: 0 $size-sm;
-
-                    option {
-                        @include flexHorizontalCenterize;
-                    }
                 }
             }
         }
